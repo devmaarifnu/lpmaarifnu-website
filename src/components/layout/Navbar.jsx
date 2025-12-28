@@ -171,7 +171,12 @@ export default function Navbar() {
   const [currentPath, setCurrentPath] = useState('');
 
   useEffect(() => {
-    setCurrentPath(window.location.pathname);
+    // Normalize path: remove trailing slash (except for root path "/")
+    let path = window.location.pathname;
+    if (path !== '/' && path.endsWith('/')) {
+      path = path.slice(0, -1);
+    }
+    setCurrentPath(path);
   }, []);
 
   // Prevent body scroll when mobile menu is open
@@ -187,10 +192,16 @@ export default function Navbar() {
   }, [isMobileMenuOpen]);
 
   const isActiveRoute = (item) => {
-    if (item.href === currentPath) return true;
-    if (item.children) {
+    // Exact match for item with direct href
+    if (item.href && item.href === currentPath) {
+      return true;
+    }
+
+    // Check if any child matches the current path
+    if (item.children && item.children.length > 0) {
       return item.children.some((child) => child.href === currentPath);
     }
+
     return false;
   };
 
