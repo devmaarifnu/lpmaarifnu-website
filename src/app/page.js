@@ -1,4 +1,6 @@
 import HeroSlider from '@/components/home/HeroSlider';
+import BeritaTerbaruSection from '@/components/home/BeritaTerbaruSection';
+import FlayerSection from '@/components/home/FlayerSection';
 import NewsCard from '@/components/shared/NewsCard';
 import { Button } from '@/components/ui/button';
 
@@ -74,35 +76,98 @@ const headlineNews = [
     author: 'Humas LP Ma\'arif',
     slug: 'pelatihan-guru-digital-learning',
   },
+  {
+    id: '4',
+    title: 'Kerjasama dengan Kemendikbudristek',
+    excerpt: 'Penandatanganan MoU untuk pengembangan kurikulum pendidikan Ma\'arif yang lebih modern dan inovatif',
+    image: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&h=600&fit=crop',
+    date: '2024-12-01',
+    category: 'Nasional',
+    author: 'Humas Pusat',
+    slug: 'kerjasama-kemendikbudristek',
+  },
 ];
 
 const latestNews = [
   {
-    id: '4',
-    title: 'Kerjasama dengan Kemendikbudristek',
-    excerpt: 'Penandatanganan MoU untuk pengembangan kurikulum',
-    image: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400&h=300&fit=crop',
-    date: '2024-12-01',
-    category: 'Nasional',
-    slug: 'kerjasama-kemendikbudristek',
-  },
-  {
     id: '5',
-    title: 'Workshop Manajemen Madrasah Modern',
-    excerpt: 'Mengoptimalkan pengelolaan madrasah di era 4.0',
-    image: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=400&h=300&fit=crop',
-    date: '2024-11-28',
-    category: 'Daerah',
-    slug: 'workshop-manajemen-madrasah',
+    title: 'Pendidikan Karakter di Era Digital',
+    excerpt: 'Pentingnya menanamkan nilai-nilai karakter dalam pendidikan di tengah kemajuan teknologi',
+    image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=300&fit=crop',
+    date: '2024-12-12',
+    category: 'Opini',
+    slug: 'pendidikan-karakter-era-digital',
   },
   {
     id: '6',
-    title: 'Lomba Kreativitas Siswa Madrasah',
-    excerpt: 'Kompetisi tingkat nasional untuk mengasah bakat siswa',
-    image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=300&fit=crop',
-    date: '2024-11-25',
-    category: 'Program',
-    slug: 'lomba-kreativitas-siswa',
+    title: 'Moderasi Beragama Melalui Pendidikan',
+    excerpt: 'Peran lembaga pendidikan dalam menanamkan nilai-nilai moderasi beragama',
+    image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=400&h=300&fit=crop',
+    date: '2024-12-08',
+    category: 'Opini',
+    slug: 'moderasi-beragama-pendidikan',
+  },
+  {
+    id: '7',
+    title: 'Transformasi Digital Pendidikan Islam',
+    excerpt: 'Mengintegrasikan teknologi dalam pembelajaran tanpa kehilangan nilai-nilai keislaman',
+    image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=300&fit=crop',
+    date: '2024-12-05',
+    category: 'Opini',
+    slug: 'transformasi-digital-pendidikan-islam',
+  },
+  {
+    id: '8',
+    title: 'Pendidikan Inklusif untuk Semua',
+    excerpt: 'Membangun sistem pendidikan yang ramah dan terbuka bagi seluruh lapisan masyarakat',
+    image: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=400&h=300&fit=crop',
+    date: '2024-12-02',
+    category: 'Opini',
+    slug: 'pendidikan-inklusif-untuk-semua',
+  },
+  {
+    id: '9',
+    title: 'Menyiapkan Generasi Emas 2045',
+    excerpt: 'Strategi pendidikan untuk mencetak generasi yang siap menghadapi tantangan masa depan',
+    image: 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=400&h=300&fit=crop',
+    date: '2024-11-28',
+    category: 'Opini',
+    slug: 'generasi-emas-2045',
+  },
+];
+
+// Mock data untuk flayer kegiatan (akan diambil dari API)
+// Format: Gambar banner landscape dengan aspect ratio 100:30 (3.33:1)
+const flayerData = [
+  {
+    id: 'f1',
+    title: 'Seminar Nasional Pendidikan Islam 2024',
+    image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=3000&h=900&fit=crop',
+    link: '/kegiatan/seminar-nasional-2024',
+  },
+  {
+    id: 'f2',
+    title: 'Workshop Kurikulum Merdeka Ma\'arif',
+    image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=3000&h=900&fit=crop',
+    link: '/kegiatan/workshop-kurikulum-merdeka',
+  },
+  {
+    id: 'f3',
+    title: 'Festival Kreativitas Siswa Madrasah',
+    image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=3000&h=900&fit=crop',
+    link: '/kegiatan/festival-kreativitas-siswa',
+  },
+  {
+    id: 'f4',
+    title: 'Pelatihan Manajemen Sekolah Digital',
+    image: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=3000&h=900&fit=crop',
+    link: '/kegiatan/pelatihan-manajemen-sekolah',
+  },
+  {
+    id: 'f5',
+    title: 'Rakerda LP Ma\'arif NU 2025',
+    image: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=3000&h=900&fit=crop',
+    link: '/kegiatan/rakerda-2025',
   },
 ];
 
@@ -173,44 +238,30 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Headline News Section */}
-      <section className="py-12 md:py-16">
-        <div className="container mx-auto">
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-neutral-900 mb-2">
-                Berita Utama
-              </h2>
-              <p className="text-neutral-600">
-                Informasi dan kegiatan terbaru dari LP Ma&apos;arif NU
-              </p>
-            </div>
-            <a href="/berita">
-              <Button variant="outline">Lihat Semua</Button>
-            </a>
-          </div>
+      {/* Berita Terbaru Section - Enhanced with Batik Pattern */}
+      <BeritaTerbaruSection news={headlineNews} />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {headlineNews.map((news) => (
-              <NewsCard key={news.id} {...news} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Latest News Sidebar Style */}
-      <section className="py-12 md:py-16 bg-neutral-50">
+      {/* Opini Section */}
+      <section className="pt-12 md:pt-16 pb-8 md:pb-10 bg-neutral-50">
         <div className="container mx-auto">
-          <h2 className="text-2xl md:text-3xl font-bold text-neutral-900 mb-6">
-            Berita Terbaru
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="mb-8">
+            <h2 className="font-bold text-neutral-900 mb-2" style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)' }}>
+              Opini
+            </h2>
+            <p className="text-neutral-600 text-sm md:text-base">
+              Pemikiran dan pandangan seputar pendidikan Islam dari para pakar dan praktisi
+            </p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {latestNews.map((news) => (
-              <NewsCard key={news.id} {...news} variant="horizontal" />
+              <NewsCard key={news.id} {...news} variant="compact" />
             ))}
           </div>
         </div>
       </section>
+
+      {/* Flayer Kegiatan Section */}
+      <FlayerSection flayers={flayerData} />
 
       {/* CTA Section */}
       <section className="py-16 md:py-20 bg-primary-600 text-white">

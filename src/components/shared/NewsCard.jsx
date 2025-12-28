@@ -15,7 +15,7 @@ import { cn } from '@/lib/utils';
  * @param {string} props.category - Article category
  * @param {string} props.author - Article author
  * @param {string} props.slug - Article slug for URL
- * @param {('default'|'horizontal'|'minimal')} props.variant - Card layout variant
+ * @param {('default'|'horizontal'|'compact'|'minimal')} props.variant - Card layout variant
  */
 export default function NewsCard({
   title,
@@ -37,9 +37,9 @@ export default function NewsCard({
     return (
       <a
         href={`/berita/${slug}`}
-        className="group flex flex-col sm:flex-row gap-4 bg-white rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 border border-neutral-200"
+        className="group flex flex-col bg-white rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 border border-neutral-200 h-full"
       >
-        <div className="relative w-full sm:w-48 h-48 sm:h-auto flex-shrink-0 overflow-hidden">
+        <div className="relative w-full aspect-[16/9] flex-shrink-0 overflow-hidden bg-neutral-100">
           <Image
             src={image}
             alt={title}
@@ -47,21 +47,19 @@ export default function NewsCard({
             className="object-cover group-hover:scale-105 transition-transform duration-300"
           />
         </div>
-        <div className="p-4 flex-1 flex flex-col justify-between">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="inline-block px-3 py-1 bg-primary-100 text-primary-700 text-xs font-semibold rounded-full">
-                {category}
-              </span>
-            </div>
-            <h3 className="text-lg font-semibold text-neutral-900 mb-2 line-clamp-2 group-hover:text-primary-600 transition-colors">
-              {title}
-            </h3>
-            <p className="text-sm text-neutral-600 line-clamp-2 mb-3">
-              {truncateText(excerpt, 120)}
-            </p>
+        <div className="p-4 flex-1 flex flex-col">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="inline-block px-3 py-1 bg-primary-100 text-primary-700 text-xs font-semibold rounded-full">
+              {category}
+            </span>
           </div>
-          <div className="flex items-center gap-4 text-xs text-neutral-500">
+          <h3 className="text-base font-semibold text-neutral-900 mb-2 line-clamp-2 group-hover:text-primary-600 transition-colors">
+            {title}
+          </h3>
+          <p className="text-sm text-neutral-600 line-clamp-2 mb-3 flex-1">
+            {truncateText(excerpt, 100)}
+          </p>
+          <div className="flex items-center gap-4 text-xs text-neutral-500 mt-auto pt-2 border-t border-neutral-100">
             <span className="flex items-center gap-1">
               <Calendar className="w-3 h-3" />
               {formattedDate}
@@ -72,6 +70,41 @@ export default function NewsCard({
                 {author}
               </span>
             )}
+          </div>
+        </div>
+      </a>
+    );
+  }
+
+  if (variant === 'compact') {
+    return (
+      <a
+        href={`/berita/${slug}`}
+        className="group flex flex-col bg-white rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 border border-neutral-200 h-full"
+      >
+        <div className="relative w-full aspect-square overflow-hidden bg-neutral-100">
+          <Image
+            src={image}
+            alt={title}
+            fill
+            className="object-cover group-hover:scale-110 transition-transform duration-500"
+          />
+          <div className="absolute top-2 left-2">
+            <span className="inline-block px-2 py-0.5 bg-primary-600 text-white text-[10px] font-semibold rounded-full">
+              {category}
+            </span>
+          </div>
+        </div>
+        <div className="p-3 flex-1 flex flex-col">
+          <h3 className="text-sm font-bold text-neutral-900 mb-2 line-clamp-2 group-hover:text-primary-600 transition-colors leading-tight">
+            {title}
+          </h3>
+          <p className="text-xs text-neutral-600 line-clamp-2 mb-2 flex-1">
+            {truncateText(excerpt, 60)}
+          </p>
+          <div className="flex items-center gap-1 text-[10px] text-neutral-500 mt-auto pt-2 border-t border-neutral-100">
+            <Calendar className="w-3 h-3" />
+            <time className="truncate">{formatDate(date, { month: 'short', day: 'numeric' })}</time>
           </div>
         </div>
       </a>
@@ -170,5 +203,5 @@ NewsCard.propTypes = {
   category: PropTypes.string.isRequired,
   author: PropTypes.string,
   slug: PropTypes.string.isRequired,
-  variant: PropTypes.oneOf(['default', 'horizontal', 'minimal']),
+  variant: PropTypes.oneOf(['default', 'horizontal', 'compact', 'minimal']),
 };
