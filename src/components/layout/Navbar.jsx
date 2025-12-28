@@ -194,8 +194,34 @@ export default function Navbar() {
     return false;
   };
 
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 100);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Add padding to body when navbar is fixed to prevent content jump
+  useEffect(() => {
+    if (isScrolled) {
+      document.body.style.paddingTop = '64px'; // navbar height
+    } else {
+      document.body.style.paddingTop = '0';
+    }
+    return () => {
+      document.body.style.paddingTop = '0';
+    };
+  }, [isScrolled]);
+
   return (
-    <nav className="bg-white border-b border-neutral-200 shadow-sm sticky top-0 z-30">
+    <nav className={cn(
+      "bg-white border-b border-neutral-200 transition-all duration-300 z-50",
+      isScrolled ? "fixed top-0 left-0 right-0 shadow-lg" : "relative shadow-sm"
+    )}>
       <div className="container mx-auto">
         <div className="flex items-center justify-between h-16">
           {/* Desktop Navigation */}

@@ -28,7 +28,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="id">
       <body className="antialiased">
-        <Header fixed={true} />
+        <Header />
         <Navbar />
         <main className="min-h-screen">
           {children}
