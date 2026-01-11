@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { getSatpenData } from '@/lib/api';
 import { Search, Download, Building2, MapPin, User, Award } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import BatikPattern from '@/components/shared/BatikPattern';
 
 const jenjangOptions = ['Semua', 'MI', 'MTs', 'MA', 'Pesantren'];
 const provinsiList = [
@@ -59,8 +60,10 @@ export default function DataSatpenPage() {
   return (
     <div className="min-h-screen bg-neutral-50">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-teal-600 to-teal-500 text-white py-16 md:py-20">
-        <div className="container mx-auto">
+      <section className="relative bg-gradient-to-r from-teal-600 to-teal-500 text-white py-16 md:py-20 overflow-hidden">
+        <BatikPattern opacity={0.2} />
+
+        <div className="container mx-auto relative z-10">
           <div className="flex items-center gap-4 mb-4">
             <Building2 className="w-12 h-12" />
             <h1 className="text-3xl md:text-4xl font-bold">

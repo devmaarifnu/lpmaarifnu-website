@@ -1,6 +1,7 @@
 import { getNewsArticles } from '@/lib/api';
 import NewsCard from '@/components/shared/NewsCard';
 import { MapPin } from 'lucide-react';
+import BatikPattern from '@/components/shared/BatikPattern';
 
 export const metadata = {
   title: 'Berita Daerah',
@@ -13,8 +14,10 @@ export default async function BeritaDaerahPage() {
   return (
     <div className="min-h-screen bg-neutral-50">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-green-600 to-green-500 text-white py-16 md:py-20">
-        <div className="container mx-auto">
+      <section className="relative bg-gradient-to-r from-green-600 to-green-500 text-white py-16 md:py-20 overflow-hidden">
+        <BatikPattern opacity={0.2} />
+
+        <div className="container mx-auto relative z-10">
           <div className="flex items-center gap-4 mb-4">
             <MapPin className="w-12 h-12" />
             <h1 className="text-3xl md:text-4xl font-bold">

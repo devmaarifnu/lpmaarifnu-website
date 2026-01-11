@@ -3,6 +3,7 @@ import Image from 'next/image';
 
 import { MessageSquare, Calendar } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
+import BatikPattern from '@/components/shared/BatikPattern';
 
 export const metadata = {
   title: 'Opini',
@@ -15,8 +16,10 @@ export default async function OpiniPage() {
   return (
     <div className="min-h-screen bg-neutral-50">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-primary-700 to-primary-500 text-white py-16 md:py-20">
-        <div className="container mx-auto">
+      <section className="relative bg-gradient-to-r from-primary-700 to-primary-500 text-white py-16 md:py-20 overflow-hidden">
+        <BatikPattern opacity={0.15} />
+
+        <div className="container mx-auto relative z-10">
           <div className="flex items-center gap-4 mb-4">
             <MessageSquare className="w-12 h-12" />
             <h1 className="text-3xl md:text-4xl font-bold">
@@ -55,7 +58,7 @@ export default async function OpiniPage() {
                       {/* Content */}
                       <div className="flex-1 flex flex-col justify-between">
                         <div>
-                          <h2 className="text-2xl md:text-3xl font-bold text-neutral-900 mb-3 group-hover:text-primary-600 transition-colors">
+                          <h2 className="text-xl md:text-2xl font-bold text-neutral-900 mb-3 group-hover:text-primary-600 transition-colors">
                             {article.title}
                           </h2>
                           <p className="text-neutral-700 mb-4 line-clamp-3">

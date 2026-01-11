@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { Award, Calendar, Users, Target } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import BatikPattern from '@/components/shared/BatikPattern';
 
 
 export const metadata = {
@@ -56,8 +57,10 @@ export default function PramukaPage() {
   return (
     <div className="min-h-screen bg-neutral-50">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-amber-700 to-amber-600 text-white py-20 md:py-28">
+      <section className="relative bg-gradient-to-r from-amber-700 to-amber-600 text-white py-20 md:py-28 overflow-hidden">
         <div className="absolute inset-0 bg-black/20" />
+        <BatikPattern opacity={0.2} />
+
         <div className="container mx-auto relative z-10">
           <div className="max-w-3xl">
             <h1 className="text-3xl md:text-4xl font-bold mb-6">

@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { Clock } from 'lucide-react';
+import BatikPattern from '@/components/shared/BatikPattern';
 
 export const metadata = {
   title: 'Sejarah LP Ma\'arif NU',
@@ -43,8 +44,10 @@ export default function SejarahPage() {
   return (
     <div className="min-h-screen bg-neutral-50">
       {/* Hero Section */}
-      <section className="bg-primary-600 text-white py-16 md:py-20">
-        <div className="container mx-auto">
+      <section className="relative bg-gradient-to-r from-primary-700 to-primary-500 text-white py-16 md:py-20 overflow-hidden">
+        <BatikPattern opacity={0.15} />
+
+        <div className="container mx-auto relative z-10">
           <h1 className="text-3xl md:text-4xl font-bold mb-4">
             Sejarah LP Ma&apos;arif NU
           </h1>
