@@ -1,46 +1,50 @@
 import Image from 'next/image';
 import { Clock } from 'lucide-react';
 import BatikPattern from '@/components/shared/BatikPattern';
+import { getPage } from '@/lib/api';
 
 export const metadata = {
   title: 'Sejarah LP Ma\'arif NU',
   description: 'Sejarah perjalanan LP Ma\'arif NU dalam mengembangkan pendidikan Islam di Indonesia',
 };
 
-const timeline = [
-  {
-    year: '1916',
-    title: 'Berdirinya Nahdlatul Ulama',
-    description: 'Nahdlatul Ulama (NU) didirikan di Surabaya sebagai organisasi keagamaan yang kemudian menjadi cikal bakal gerakan pendidikan Ma\'arif.',
-  },
-  {
-    year: '1926',
-    title: 'Pembentukan Ma\'arif',
-    description: 'Lembaga Pendidikan Ma\'arif dibentuk sebagai badan otonom NU yang mengelola pendidikan Islam.',
-  },
-  {
-    year: '1950-an',
-    title: 'Ekspansi Pendidikan',
-    description: 'Mulai berkembang pesat dengan mendirikan madrasah dan pesantren di berbagai daerah di Indonesia.',
-  },
-  {
-    year: '1980-an',
-    title: 'Modernisasi Sistem',
-    description: 'Modernisasi sistem pendidikan dengan mengintegrasikan kurikulum nasional dan nilai-nilai keislaman.',
-  },
-  {
-    year: '2000-an',
-    title: 'Era Digital',
-    description: 'Adaptasi dengan perkembangan teknologi dan digitalisasi pendidikan.',
-  },
-  {
-    year: '2024',
-    title: 'Transformasi Berkelanjutan',
-    description: 'Terus berinovasi dalam menyediakan pendidikan berkualitas yang relevan dengan kebutuhan zaman.',
-  },
-];
+export default async function SejarahPage() {
+  // Fetch page data from API
+  const pageData = await getPage('sejarah');
 
-export default function SejarahPage() {
+  // Use API data if available, otherwise use fallback
+  const timeline = pageData?.content?.timeline || [
+    {
+      year: '1916',
+      title: 'Berdirinya Nahdlatul Ulama',
+      description: 'Nahdlatul Ulama (NU) didirikan di Surabaya sebagai organisasi keagamaan yang kemudian menjadi cikal bakal gerakan pendidikan Ma\'arif.',
+    },
+    {
+      year: '1926',
+      title: 'Pembentukan Ma\'arif',
+      description: 'Lembaga Pendidikan Ma\'arif dibentuk sebagai badan otonom NU yang mengelola pendidikan Islam.',
+    },
+    {
+      year: '1950-an',
+      title: 'Ekspansi Pendidikan',
+      description: 'Mulai berkembang pesat dengan mendirikan madrasah dan pesantren di berbagai daerah di Indonesia.',
+    },
+    {
+      year: '1980-an',
+      title: 'Modernisasi Sistem',
+      description: 'Modernisasi sistem pendidikan dengan mengintegrasikan kurikulum nasional dan nilai-nilai keislaman.',
+    },
+    {
+      year: '2000-an',
+      title: 'Era Digital',
+      description: 'Adaptasi dengan perkembangan teknologi dan digitalisasi pendidikan.',
+    },
+    {
+      year: '2024',
+      title: 'Transformasi Berkelanjutan',
+      description: 'Terus berinovasi dalam menyediakan pendidikan berkualitas yang relevan dengan kebutuhan zaman.',
+    },
+  ];
   return (
     <div className="min-h-screen bg-neutral-50">
       {/* Hero Section */}

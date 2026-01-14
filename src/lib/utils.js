@@ -17,8 +17,35 @@ export function cn(...inputs) {
  * @returns {string} Formatted date string
  */
 export function formatDate(date, options = { dateStyle: 'long' }) {
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
-  return new Intl.DateTimeFormat('id-ID', options).format(dateObj);
+  // Handle null, undefined, or empty string
+  if (!date) {
+    return 'Tanggal tidak tersedia';
+  }
+
+  try {
+    // Convert to Date object if string
+    let dateObj;
+
+    if (date instanceof Date) {
+      dateObj = date;
+    } else if (typeof date === 'string' || typeof date === 'number') {
+      dateObj = new Date(date);
+    } else {
+      console.warn('Invalid date type provided to formatDate:', typeof date, date);
+      return 'Tanggal tidak valid';
+    }
+
+    // Check if date is valid
+    if (!dateObj || isNaN(dateObj.getTime()) || !dateObj.getTime) {
+      console.warn('Invalid date provided to formatDate:', date);
+      return 'Tanggal tidak valid';
+    }
+
+    return new Intl.DateTimeFormat('id-ID', options).format(dateObj);
+  } catch (error) {
+    console.error('Error formatting date:', error, 'Input:', date);
+    return 'Tanggal tidak valid';
+  }
 }
 
 /**
@@ -44,4 +71,36 @@ export function generateSlug(title) {
     .replace(/\s+/g, '-')
     .replace(/-+/g, '-')
     .trim();
+}
+
+/**
+ * Safely transform article data from API
+ * @param {Object} article - Raw article data from API
+ * @param {string} defaultCategory - Default category if not provided
+ * @returns {Object} Transformed article data
+ */
+export function transformArticle(article, defaultCategory = 'Berita') {
+  if (!article) return null;
+
+  return {
+    id: article.id || Math.random().toString(),
+    title: article.title || 'Untitled',
+    excerpt: article.excerpt || '',
+    image: article.image || '/placeholder-image.jpg',
+    date: article.published_at || article.date || new Date().toISOString(),
+    category: article.category?.name || article.category || defaultCategory,
+    author: article.author?.name || article.author || 'Admin',
+    slug: article.slug || 'untitled',
+  };
+}
+
+/**
+ * Safely transform multiple articles
+ * @param {Array} articles - Array of raw article data from API
+ * @param {string} defaultCategory - Default category if not provided
+ * @returns {Array} Array of transformed article data
+ */
+export function transformArticles(articles, defaultCategory = 'Berita') {
+  if (!Array.isArray(articles)) return [];
+  return articles.map(article => transformArticle(article, defaultCategory)).filter(Boolean);
 }

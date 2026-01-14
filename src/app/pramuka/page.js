@@ -2,14 +2,23 @@ import Image from 'next/image';
 import { Award, Calendar, Users, Target } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import BatikPattern from '@/components/shared/BatikPattern';
-
+import { getPage } from '@/lib/api';
 
 export const metadata = {
   title: 'Pramuka Ma\'arif',
   description: 'Gerakan Pramuka di lingkungan satuan pendidikan LP Ma\'arif NU',
 };
 
-const achievements = [
+// Icon mapping for programs
+const iconMap = {
+  'target': Target,
+  'users': Users,
+  'award': Award,
+  'calendar': Calendar,
+};
+
+// Fallback data
+const fallbackAchievements = [
   {
     title: 'Juara Umum Jambore Nasional 2023',
     description: 'Kontingen LP Ma\'arif NU meraih juara umum dalam Jambore Nasional Pramuka 2023',
@@ -30,30 +39,64 @@ const achievements = [
   },
 ];
 
-const programs = [
+const fallbackPrograms = [
   {
-    icon: Target,
+    icon: 'target',
     title: 'Pembinaan Karakter',
     description: 'Program pembinaan karakter melalui kegiatan kepramukaan yang terintegrasi dengan nilai-nilai Islam',
   },
   {
-    icon: Users,
+    icon: 'users',
     title: 'Pelatihan Kepemimpinan',
     description: 'Mengembangkan jiwa kepemimpinan dan kemampuan organisasi siswa',
   },
   {
-    icon: Award,
+    icon: 'award',
     title: 'Kompetisi & Lomba',
     description: 'Mengikuti berbagai kompetisi kepramukaan tingkat daerah hingga nasional',
   },
   {
-    icon: Calendar,
+    icon: 'calendar',
     title: 'Kegiatan Rutin',
     description: 'Latihan rutin, perkemahan, dan kegiatan sosial berkelanjutan',
   },
 ];
 
-export default function PramukaPage() {
+export default async function PramukaPage() {
+  // Fetch pramuka data from API
+  const pageData = await getPage('pramuka');
+
+  // Extract data from API with fallbacks
+  const heroTitle = pageData?.content?.hero?.title || 'Gerakan Pramuka Ma\'arif NU';
+  const heroDescription = pageData?.content?.hero?.description || 'Membentuk karakter pemuda yang berakhlak mulia, cinta tanah air, dan berwawasan keislaman';
+
+  // About section
+  const aboutTitle = pageData?.content?.about?.title || 'Tentang Pramuka Ma\'arif';
+  const aboutParagraphs = pageData?.content?.about?.paragraphs || [
+    'Gerakan Pramuka di lingkungan satuan pendidikan LP Ma\'arif NU merupakan wadah pembinaan karakter dan kepribadian siswa yang berlandaskan nilai-nilai Pancasila dan Ahlussunnah Wal Jama\'ah an-Nahdliyyah.',
+    'Melalui berbagai kegiatan kepramukaan, kami membentuk generasi muda yang memiliki jiwa kepemimpinan, tanggung jawab, dan kepedulian terhadap sesama dan lingkungan.',
+    'Dengan jaringan lebih dari 5.000 gugus depan di seluruh Indonesia, Pramuka Ma\'arif aktif dalam berbagai kegiatan nasional dan internasional.'
+  ];
+  const aboutImage = pageData?.content?.about?.image || 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800&h=600&fit=crop';
+
+  // Programs section
+  const programsTitle = pageData?.content?.programs?.title || 'Program Unggulan';
+  const programsDescription = pageData?.content?.programs?.description || 'Berbagai program pembinaan yang dirancang untuk mengembangkan potensi siswa';
+  const programsList = pageData?.content?.programs?.list?.map(program => ({
+    icon: iconMap[program.icon] || Target,
+    title: program.title,
+    description: program.description,
+  })) || fallbackPrograms.map(p => ({ ...p, icon: iconMap[p.icon] }));
+
+  // Achievements section
+  const achievementsTitle = pageData?.content?.achievements?.title || 'Prestasi & Kegiatan';
+  const achievementsDescription = pageData?.content?.achievements?.description || 'Pencapaian membanggakan dari gerakan pramuka Ma\'arif NU';
+  const achievementsList = pageData?.content?.achievements?.list || fallbackAchievements;
+
+  // CTA section
+  const ctaTitle = pageData?.content?.cta?.title || 'Bergabung dengan Pramuka Ma\'arif NU';
+  const ctaDescription = pageData?.content?.cta?.description || 'Mari bersama membangun karakter generasi muda yang berakhlak mulia dan cinta tanah air';
+
   return (
     <div className="min-h-screen bg-neutral-50">
       {/* Hero Section */}
@@ -64,10 +107,10 @@ export default function PramukaPage() {
         <div className="container mx-auto relative z-10">
           <div className="max-w-3xl">
             <h1 className="text-3xl md:text-4xl font-bold mb-6">
-              Gerakan Pramuka Ma&apos;arif NU
+              {heroTitle}
             </h1>
             <p className="text-lg md:text-xl text-amber-100 mb-8">
-              Membentuk karakter pemuda yang berakhlak mulia, cinta tanah air, dan berwawasan keislaman
+              {heroDescription}
             </p>
             <div className="flex flex-wrap gap-4">
               <a href="#program">
@@ -92,24 +135,18 @@ export default function PramukaPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
               <div>
                 <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-6">
-                  Tentang Pramuka Ma&apos;arif
+                  {aboutTitle}
                 </h2>
                 <div className="space-y-4 text-neutral-700 leading-relaxed">
-                  <p>
-                    Gerakan Pramuka di lingkungan satuan pendidikan LP Ma&apos;arif NU merupakan wadah pembinaan karakter dan kepribadian siswa yang berlandaskan nilai-nilai Pancasila dan Ahlussunnah Wal Jama&apos;ah an-Nahdliyyah.
-                  </p>
-                  <p>
-                    Melalui berbagai kegiatan kepramukaan, kami membentuk generasi muda yang memiliki jiwa kepemimpinan, tanggung jawab, dan kepedulian terhadap sesama dan lingkungan.
-                  </p>
-                  <p>
-                    Dengan jaringan lebih dari 5.000 gugus depan di seluruh Indonesia, Pramuka Ma&apos;arif aktif dalam berbagai kegiatan nasional dan internasional.
-                  </p>
+                  {aboutParagraphs.map((paragraph, index) => (
+                    <p key={index}>{paragraph}</p>
+                  ))}
                 </div>
               </div>
 
               <div className="relative h-96 rounded-xl overflow-hidden shadow-xl">
                 <Image
-                  src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800&h=600&fit=crop"
+                  src={aboutImage}
                   alt="Pramuka Ma'arif"
                   fill
                   className="object-cover"
@@ -126,15 +163,15 @@ export default function PramukaPage() {
           <div className="max-w-5xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">
-                Program Unggulan
+                {programsTitle}
               </h2>
               <p className="text-lg text-neutral-600 max-w-2xl mx-auto">
-                Berbagai program pembinaan yang dirancang untuk mengembangkan potensi siswa
+                {programsDescription}
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {programs.map((program, index) => (
+              {programsList.map((program, index) => (
                 <div
                   key={index}
                   className="bg-white rounded-xl p-6 hover:shadow-lg transition-shadow border border-neutral-200"
@@ -165,15 +202,15 @@ export default function PramukaPage() {
           <div className="max-w-5xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">
-                Prestasi & Kegiatan
+                {achievementsTitle}
               </h2>
               <p className="text-lg text-neutral-600 max-w-2xl mx-auto">
-                Pencapaian membanggakan dari gerakan pramuka Ma&apos;arif NU
+                {achievementsDescription}
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {achievements.map((achievement, index) => (
+              {achievementsList.map((achievement, index) => (
                 <div
                   key={index}
                   className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow"
@@ -213,10 +250,10 @@ export default function PramukaPage() {
       <section className="py-16 md:py-20 bg-gradient-to-r from-amber-700 to-amber-600 text-white">
         <div className="container mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Bergabung dengan Pramuka Ma&apos;arif NU
+            {ctaTitle}
           </h2>
           <p className="text-lg text-amber-100 mb-8 max-w-2xl mx-auto">
-            Mari bersama membangun karakter generasi muda yang berakhlak mulia dan cinta tanah air
+            {ctaDescription}
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <a href="/kontak">

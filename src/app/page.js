@@ -3,175 +3,12 @@ import BeritaTerbaruSection from '@/components/home/BeritaTerbaruSection';
 import FlayerSection from '@/components/home/FlayerSection';
 import NewsCard from '@/components/shared/NewsCard';
 import { Button } from '@/components/ui/button';
+import { getHeroSlides, getFeaturedNews, getOpinionArticles, getEventFlayers } from '@/lib/api';
+import { transformArticles } from '@/lib/utils';
 
 import { Newspaper, GraduationCap, Users, FileText } from 'lucide-react';
 
-// Mock data untuk Hero Slider
-const heroSlides = [
-  {
-    id: '1',
-    image: 'https://images.unsplash.com/photo-1766593896586-9c597d86faf2?q=1920&w=1080&auto=format&fit=crop',
-    title: 'Membangun Pendidikan Islam Berkualitas',
-    description: 'LP Ma\'arif NU berkomitmen mengembangkan sistem pendidikan Islam yang unggul dan modern di seluruh Indonesia',
-    cta: {
-      label: 'Pelajari Lebih Lanjut',
-      href: '/tentang/visi-misi',
-      secondary: {
-        label: 'Hubungi Kami',
-        href: '/kontak',
-      },
-    },
-  },
-  {
-    id: '2',
-    image: 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?q=1920&w=1080&auto=format&fit=crop',
-    title: 'Program Pendidikan Terpadu',
-    description: 'Mengintegrasikan nilai-nilai keislaman dengan pendidikan modern untuk menghasilkan generasi yang cerdas dan berakhlak mulia',
-    cta: {
-      label: 'Lihat Program',
-      href: '/tentang/program-strategis',
-    },
-  },
-  {
-    id: '3',
-    image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=1920&w=1080&auto=format&fit=crop',
-    title: 'Jaringan Satuan Pendidikan Terluas',
-    description: 'Lebih dari ribuan satuan pendidikan di bawah naungan LP Ma\'arif NU tersebar di seluruh Indonesia',
-    cta: {
-      label: 'Data Satpen',
-      href: '/data-satpen',
-    },
-  },
-];
-
-// Mock data untuk berita
-const headlineNews = [
-  {
-    id: '1',
-    title: 'Peluncuran Program Beasiswa Pendidikan 2024',
-    excerpt: 'LP Ma\'arif NU meluncurkan program beasiswa untuk siswa berprestasi dari keluarga kurang mampu di seluruh Indonesia',
-    image: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&h=600&fit=crop',
-    date: '2024-12-15',
-    category: 'Program',
-    author: 'Admin LP Ma\'arif',
-    slug: 'peluncuran-program-beasiswa-2024',
-  },
-  {
-    id: '2',
-    title: 'Rakernas LP Ma\'arif NU 2024 Sukses Digelar',
-    excerpt: 'Rapat Kerja Nasional membahas strategi pengembangan pendidikan Ma\'arif di era digital dengan partisipasi seluruh pengurus wilayah',
-    image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=600&fit=crop',
-    date: '2024-12-10',
-    category: 'Nasional',
-    author: 'Tim Redaksi',
-    slug: 'rakernas-lp-maarif-nu-2024',
-  },
-  {
-    id: '3',
-    title: 'Pelatihan Guru Digital Learning',
-    excerpt: 'Ratusan guru dari satuan pendidikan Ma\'arif mengikuti pelatihan penggunaan teknologi dalam pembelajaran',
-    image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&h=600&fit=crop',
-    date: '2024-12-05',
-    category: 'Daerah',
-    author: 'Humas LP Ma\'arif',
-    slug: 'pelatihan-guru-digital-learning',
-  },
-  {
-    id: '4',
-    title: 'Kerjasama dengan Kemendikbudristek',
-    excerpt: 'Penandatanganan MoU untuk pengembangan kurikulum pendidikan Ma\'arif yang lebih modern dan inovatif',
-    image: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&h=600&fit=crop',
-    date: '2024-12-01',
-    category: 'Nasional',
-    author: 'Humas Pusat',
-    slug: 'kerjasama-kemendikbudristek',
-  },
-];
-
-const latestNews = [
-  {
-    id: '5',
-    title: 'Pendidikan Karakter di Era Digital',
-    excerpt: 'Pentingnya menanamkan nilai-nilai karakter dalam pendidikan di tengah kemajuan teknologi',
-    image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=300&fit=crop',
-    date: '2024-12-12',
-    category: 'Opini',
-    slug: 'pendidikan-karakter-era-digital',
-  },
-  {
-    id: '6',
-    title: 'Moderasi Beragama Melalui Pendidikan',
-    excerpt: 'Peran lembaga pendidikan dalam menanamkan nilai-nilai moderasi beragama',
-    image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=400&h=300&fit=crop',
-    date: '2024-12-08',
-    category: 'Opini',
-    slug: 'moderasi-beragama-pendidikan',
-  },
-  {
-    id: '7',
-    title: 'Transformasi Digital Pendidikan Islam',
-    excerpt: 'Mengintegrasikan teknologi dalam pembelajaran tanpa kehilangan nilai-nilai keislaman',
-    image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=300&fit=crop',
-    date: '2024-12-05',
-    category: 'Opini',
-    slug: 'transformasi-digital-pendidikan-islam',
-  },
-  {
-    id: '8',
-    title: 'Pendidikan Inklusif untuk Semua',
-    excerpt: 'Membangun sistem pendidikan yang ramah dan terbuka bagi seluruh lapisan masyarakat',
-    image: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=400&h=300&fit=crop',
-    date: '2024-12-02',
-    category: 'Opini',
-    slug: 'pendidikan-inklusif-untuk-semua',
-  },
-  {
-    id: '9',
-    title: 'Menyiapkan Generasi Emas 2045',
-    excerpt: 'Strategi pendidikan untuk mencetak generasi yang siap menghadapi tantangan masa depan',
-    image: 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=400&h=300&fit=crop',
-    date: '2024-11-28',
-    category: 'Opini',
-    slug: 'generasi-emas-2045',
-  },
-];
-
-// Mock data untuk flayer kegiatan (akan diambil dari API)
-// Format: Gambar banner landscape dengan aspect ratio 100:30 (3.33:1)
-const flayerData = [
-  {
-    id: 'f1',
-    title: 'Seminar Nasional Pendidikan Islam 2024',
-    image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=3000&h=900&fit=crop',
-    link: '/kegiatan/seminar-nasional-2024',
-  },
-  {
-    id: 'f2',
-    title: 'Workshop Kurikulum Merdeka Ma\'arif',
-    image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=3000&h=900&fit=crop',
-    link: '/kegiatan/workshop-kurikulum-merdeka',
-  },
-  {
-    id: 'f3',
-    title: 'Festival Kreativitas Siswa Madrasah',
-    image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=3000&h=900&fit=crop',
-    link: '/kegiatan/festival-kreativitas-siswa',
-  },
-  {
-    id: 'f4',
-    title: 'Pelatihan Manajemen Sekolah Digital',
-    image: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=3000&h=900&fit=crop',
-    link: '/kegiatan/pelatihan-manajemen-sekolah',
-  },
-  {
-    id: 'f5',
-    title: 'Rakerda LP Ma\'arif NU 2025',
-    image: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=3000&h=900&fit=crop',
-    link: '/kegiatan/rakerda-2025',
-  },
-];
-
-// Mock data untuk fitur unggulan
+// Features data
 const features = [
   {
     icon: Newspaper,
@@ -207,7 +44,27 @@ const features = [
   },
 ];
 
-export default function Home() {
+export default async function Home() {
+  // Fetch data from API with error handling
+  let heroSlides = [];
+  let featuredNews = [];
+  let opinionArticles = [];
+  let flayerData = [];
+
+  try {
+    heroSlides = await getHeroSlides();
+    featuredNews = await getFeaturedNews(4);
+    const opinionData = await getOpinionArticles({ limit: 5 });
+    opinionArticles = opinionData.articles || [];
+    flayerData = await getEventFlayers({ limit: 10, active: true });
+  } catch (error) {
+    console.error('Error fetching home page data:', error);
+  }
+
+  // Transform API data using utility function for safe transformation
+  const headlineNews = transformArticles(featuredNews, 'Berita');
+  const latestNews = transformArticles(opinionArticles, 'Opini');
+
   return (
     <>
       {/* Hero Slider */}

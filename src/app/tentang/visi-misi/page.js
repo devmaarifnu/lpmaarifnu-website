@@ -1,62 +1,89 @@
 import { Eye, Target, Lightbulb, Users } from 'lucide-react';
 import BatikPattern from '@/components/shared/BatikPattern';
+import { getPage } from '@/lib/api';
 
 export const metadata = {
   title: 'Visi & Misi',
   description: 'Visi dan Misi LP Ma\'arif NU dalam mengembangkan pendidikan Islam berkualitas',
 };
 
-const misiList = [
-  {
-    icon: Lightbulb,
-    title: 'Pendidikan Berkualitas',
-    description: 'Menyelenggarakan pendidikan yang berkualitas, berakhlak mulia, dan berkarakter Ahlussunnah Wal Jama\'ah an-Nahdliyyah.',
-  },
-  {
-    icon: Users,
-    title: 'Pemberdayaan SDM',
-    description: 'Meningkatkan kualitas sumber daya manusia melalui pendidikan dan pelatihan berkelanjutan.',
-  },
-  {
-    icon: Target,
-    title: 'Inovasi Pembelajaran',
-    description: 'Mengembangkan sistem pembelajaran yang inovatif dan adaptif terhadap perkembangan zaman.',
-  },
-  {
-    icon: Users,
-    title: 'Jaringan Pendidikan',
-    description: 'Memperluas dan memperkuat jaringan satuan pendidikan Ma\'arif di seluruh Indonesia.',
-  },
-];
+// Default icon mapping for mission items
+const missionIcons = {
+  'Lightbulb': Lightbulb,
+  'Users': Users,
+  'Target': Target,
+};
 
-const nilaiNilai = [
-  {
-    title: 'Religius',
-    description: 'Menjunjung tinggi nilai-nilai keislaman yang moderat dan rahmatan lil alamin',
-  },
-  {
-    title: 'Integritas',
-    description: 'Menjalankan tugas dengan jujur, transparan, dan bertanggung jawab',
-  },
-  {
-    title: 'Profesional',
-    description: 'Bekerja dengan standar profesional dan kompetensi yang tinggi',
-  },
-  {
-    title: 'Inovatif',
-    description: 'Terus berinovasi dalam mengembangkan pendidikan yang relevan',
-  },
-  {
-    title: 'Kolaboratif',
-    description: 'Membangun kerjasama yang sinergis dengan berbagai pihak',
-  },
-  {
-    title: 'Inklusif',
-    description: 'Terbuka dan menghargai keberagaman dalam pendidikan',
-  },
-];
+export default async function VisiMisiPage() {
+  // Fetch page data from API
+  const pageData = await getPage('visi-misi');
 
-export default function VisiMisiPage() {
+  // Use API data if available, otherwise use fallback
+  const visi = pageData?.content?.visi || "Terwujudnya lembaga pendidikan Islam yang unggul, moderat, dan berkarakter Ahlussunnah Wal Jama'ah an-Nahdliyyah untuk mencerdaskan kehidupan bangsa dan mewujudkan masyarakat yang beriman, bertakwa, berakhlak mulia, serta menguasai ilmu pengetahuan dan teknologi.";
+
+  const misiList = pageData?.content?.misi?.map((misi, index) => {
+    const iconNames = ['Lightbulb', 'Users', 'Target', 'Users'];
+    const iconName = iconNames[index % iconNames.length];
+    return typeof misi === 'string'
+      ? {
+          icon: missionIcons[iconName] || Lightbulb,
+          title: `Misi ${index + 1}`,
+          description: misi,
+        }
+      : {
+          icon: missionIcons[iconName] || Lightbulb,
+          title: `Misi ${index + 1}`,
+          description: misi,
+        };
+  }) || [
+    {
+      icon: Lightbulb,
+      title: 'Pendidikan Berkualitas',
+      description: 'Menyelenggarakan pendidikan yang berkualitas, berakhlak mulia, dan berkarakter Ahlussunnah Wal Jama\'ah an-Nahdliyyah.',
+    },
+    {
+      icon: Users,
+      title: 'Pemberdayaan SDM',
+      description: 'Meningkatkan kualitas sumber daya manusia melalui pendidikan dan pelatihan berkelanjutan.',
+    },
+    {
+      icon: Target,
+      title: 'Inovasi Pembelajaran',
+      description: 'Mengembangkan sistem pembelajaran yang inovatif dan adaptif terhadap perkembangan zaman.',
+    },
+    {
+      icon: Users,
+      title: 'Jaringan Pendidikan',
+      description: 'Memperluas dan memperkuat jaringan satuan pendidikan Ma\'arif di seluruh Indonesia.',
+    },
+  ];
+
+  const nilaiNilai = pageData?.content?.nilai_nilai || [
+    {
+      title: 'Religius',
+      description: 'Menjunjung tinggi nilai-nilai keislaman yang moderat dan rahmatan lil alamin',
+    },
+    {
+      title: 'Integritas',
+      description: 'Menjalankan tugas dengan jujur, transparan, dan bertanggung jawab',
+    },
+    {
+      title: 'Profesional',
+      description: 'Bekerja dengan standar profesional dan kompetensi yang tinggi',
+    },
+    {
+      title: 'Inovatif',
+      description: 'Terus berinovasi dalam mengembangkan pendidikan yang relevan',
+    },
+    {
+      title: 'Kolaboratif',
+      description: 'Membangun kerjasama yang sinergis dengan berbagai pihak',
+    },
+    {
+      title: 'Inklusif',
+      description: 'Terbuka dan menghargai keberagaman dalam pendidikan',
+    },
+  ];
   return (
     <div className="min-h-screen bg-neutral-50">
       {/* Hero Section */}
@@ -86,7 +113,7 @@ export default function VisiMisiPage() {
                   <h2 className="text-3xl md:text-4xl font-bold">Visi</h2>
                 </div>
                 <p className="text-xl md:text-2xl leading-relaxed text-primary-50">
-                  &quot;Terwujudnya lembaga pendidikan Islam yang unggul, moderat, dan berkarakter Ahlussunnah Wal Jama&apos;ah an-Nahdliyyah untuk mencerdaskan kehidupan bangsa dan mewujudkan masyarakat yang beriman, bertakwa, berakhlak mulia, serta menguasai ilmu pengetahuan dan teknologi.&quot;
+                  &quot;{visi}&quot;
                 </p>
               </div>
             </div>

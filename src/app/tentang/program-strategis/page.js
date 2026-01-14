@@ -1,91 +1,31 @@
 import { Lightbulb, GraduationCap, Users, BookOpen, Award, Globe } from 'lucide-react';
 import BatikPattern from '@/components/shared/BatikPattern';
+import { getPage } from '@/lib/api';
 
 export const metadata = {
   title: 'Program Strategis',
   description: 'Program-program strategis LP Ma\'arif NU untuk pengembangan pendidikan',
 };
 
-const programs = [
-  {
-    icon: GraduationCap,
-    title: 'Peningkatan Mutu Pendidikan',
-    description: 'Program komprehensif untuk meningkatkan kualitas pembelajaran di seluruh satuan pendidikan Ma\'arif',
-    goals: [
-      'Meningkatkan kompetensi guru melalui pelatihan berkelanjutan',
-      'Mengembangkan metode pembelajaran inovatif',
-      'Meningkatkan fasilitas dan sarana pembelajaran',
-      'Implementasi teknologi pendidikan terkini',
-    ],
-    status: 'Ongoing',
-    color: 'blue',
-  },
-  {
-    icon: BookOpen,
-    title: 'Kurikulum Berbasis Ma\'arif',
-    description: 'Pengembangan kurikulum yang mengintegrasikan nilai-nilai Islam Ahlussunnah dengan kurikulum nasional',
-    goals: [
-      'Menyusun kurikulum Ma\'arif yang komprehensif',
-      'Integrasi nilai-nilai keislaman moderat',
-      'Pengembangan bahan ajar dan modul pembelajaran',
-      'Pelatihan guru dalam implementasi kurikulum',
-    ],
-    status: 'Ongoing',
-    color: 'green',
-  },
-  {
-    icon: Users,
-    title: 'Pemberdayaan SDM',
-    description: 'Program pengembangan kapasitas guru, tenaga kependidikan, dan pengelola satuan pendidikan',
-    goals: [
-      'Sertifikasi dan peningkatan kualifikasi guru',
-      'Pelatihan manajemen sekolah modern',
-      'Pengembangan kepemimpinan pendidikan',
-      'Program beasiswa lanjut studi',
-    ],
-    status: 'Ongoing',
-    color: 'purple',
-  },
-  {
-    icon: Globe,
-    title: 'Digitalisasi Pendidikan',
-    description: 'Transformasi digital sistem pendidikan Ma\'arif untuk menghadapi era Society 5.0',
-    goals: [
-      'Pengembangan Learning Management System (LMS)',
-      'Pelatihan literasi digital guru dan siswa',
-      'Pengadaan infrastruktur teknologi',
-      'Platform administrasi terpadu',
-    ],
-    status: 'Ongoing',
-    color: 'cyan',
-  },
-  {
-    icon: Award,
-    title: 'Beasiswa & Bantuan Pendidikan',
-    description: 'Program bantuan pendidikan untuk siswa berprestasi dari keluarga kurang mampu',
-    goals: [
-      'Beasiswa penuh untuk 1000 siswa per tahun',
-      'Bantuan operasional untuk sekolah',
-      'Program subsidi biaya pendidikan',
-      'Bantuan sarana pembelajaran',
-    ],
-    status: 'Ongoing',
-    color: 'yellow',
-  },
-  {
-    icon: Lightbulb,
-    title: 'Inovasi & Penelitian',
-    description: 'Mendorong inovasi dan penelitian dalam pengembangan pendidikan Islam',
-    goals: [
-      'Hibah penelitian pendidikan',
-      'Kompetisi inovasi pembelajaran',
-      'Publikasi jurnal ilmiah pendidikan',
-      'Kerjasama penelitian dengan perguruan tinggi',
-    ],
-    status: 'Ongoing',
-    color: 'orange',
-  },
-];
+// Icon mapping for programs
+const iconMap = {
+  'teaching': GraduationCap,
+  'digital': Globe,
+  'curriculum': BookOpen,
+  'scholarship': Award,
+  'innovation': Lightbulb,
+  'hr': Users,
+};
+
+// Color mapping for programs
+const colorMap = {
+  'teaching': 'blue',
+  'digital': 'cyan',
+  'curriculum': 'green',
+  'scholarship': 'yellow',
+  'innovation': 'orange',
+  'hr': 'purple',
+};
 
 const getColorClasses = (color) => {
   const colors = {
@@ -99,7 +39,56 @@ const getColorClasses = (color) => {
   return colors[color] || colors.blue;
 };
 
-export default function ProgramStrategisPage() {
+export default async function ProgramStrategisPage() {
+  // Fetch program data from API
+  const pageData = await getPage('program-strategis');
+
+  // Extract introduction text from API
+  const introductionText = pageData?.content?.introduction ||
+    'LP Ma\'arif NU memiliki komitmen kuat untuk terus mengembangkan dan meningkatkan kualitas pendidikan Islam di Indonesia melalui berbagai program strategis yang terencana dan berkelanjutan. Program-program ini dirancang untuk menjawab tantangan pendidikan di era modern sambil tetap mempertahankan nilai-nilai luhur keislaman.';
+
+  // Transform API data or use fallback
+  const programs = pageData?.content?.programs?.map((program, index) => {
+    const iconKey = program.icon || 'teaching';
+    const colorKey = colorMap[iconKey] || ['blue', 'green', 'purple', 'cyan', 'yellow', 'orange'][index % 6];
+
+    return {
+      icon: iconMap[iconKey] || GraduationCap,
+      title: program.title,
+      description: program.description,
+      goals: program.goals || program.targets || [],
+      status: program.status || 'Ongoing',
+      color: colorKey,
+    };
+  }) || [
+    {
+      icon: GraduationCap,
+      title: 'Peningkatan Mutu Pendidikan',
+      description: 'Program komprehensif untuk meningkatkan kualitas pembelajaran di seluruh satuan pendidikan Ma\'arif',
+      goals: [
+        'Meningkatkan kompetensi guru melalui pelatihan berkelanjutan',
+        'Mengembangkan metode pembelajaran inovatif',
+        'Meningkatkan fasilitas dan sarana pembelajaran',
+        'Implementasi teknologi pendidikan terkini',
+      ],
+      status: 'Ongoing',
+      color: 'blue',
+    },
+    {
+      icon: BookOpen,
+      title: 'Kurikulum Berbasis Ma\'arif',
+      description: 'Pengembangan kurikulum yang mengintegrasikan nilai-nilai Islam Ahlussunnah dengan kurikulum nasional',
+      goals: [
+        'Menyusun kurikulum Ma\'arif yang komprehensif',
+        'Integrasi nilai-nilai keislaman moderat',
+        'Pengembangan bahan ajar dan modul pembelajaran',
+        'Pelatihan guru dalam implementasi kurikulum',
+      ],
+      status: 'Ongoing',
+      color: 'green',
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-neutral-50">
       {/* Hero Section */}

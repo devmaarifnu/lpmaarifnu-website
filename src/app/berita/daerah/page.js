@@ -1,15 +1,13 @@
-import { getNewsArticles } from '@/lib/api';
-import NewsCard from '@/components/shared/NewsCard';
+import BeritaDaerahContent from '@/components/berita/BeritaDaerahContent';
 import { MapPin } from 'lucide-react';
 import BatikPattern from '@/components/shared/BatikPattern';
 
 export const metadata = {
-  title: 'Berita Daerah',
+  title: 'Berita Daerah - LP Ma\'arif NU',
   description: 'Berita dan informasi terkini dari berbagai daerah LP Ma\'arif NU',
 };
 
-export default async function BeritaDaerahPage() {
-  const articles = await getNewsArticles({ category: 'daerah' });
+export default function BeritaDaerahPage() {
 
   return (
     <div className="min-h-screen bg-neutral-50">
@@ -31,27 +29,7 @@ export default async function BeritaDaerahPage() {
       </section>
 
       {/* Content Section */}
-      <section className="py-12 md:py-16">
-        <div className="container mx-auto">
-          {articles.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-              {articles.map((article) => (
-                <NewsCard key={article.id} {...article} />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-16">
-              <MapPin className="w-16 h-16 text-neutral-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-neutral-900 mb-2">
-                Belum Ada Berita
-              </h3>
-              <p className="text-neutral-600">
-                Berita daerah akan segera ditampilkan di sini
-              </p>
-            </div>
-          )}
-        </div>
-      </section>
+      <BeritaDaerahContent />
     </div>
   );
 }
