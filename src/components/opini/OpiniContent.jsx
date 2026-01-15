@@ -7,11 +7,12 @@ import Image from 'next/image';
 import Pagination from '@/components/shared/Pagination';
 import { MessageSquare, Calendar } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
+import toast from 'react-hot-toast';
 
 export default function OpiniContent() {
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams.get('page')) || 1;
-  const limit = 3;
+  const limit = 10;
 
   const [articles, setArticles] = useState([]);
   const [pagination, setPagination] = useState(null);
@@ -43,6 +44,7 @@ export default function OpiniContent() {
         setPagination(paginationData);
       } catch (error) {
         console.error('Error fetching opini articles:', error);
+        toast.error('Gagal memuat artikel opini');
         setArticles([]);
         setPagination(null);
       } finally {

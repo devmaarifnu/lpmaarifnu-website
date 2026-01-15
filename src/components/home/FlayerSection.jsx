@@ -60,40 +60,65 @@ export default function FlayerSection({ flayers = [] }) {
           <div className="relative w-full overflow-hidden rounded-xl shadow-lg bg-white">
             {/* Aspect Ratio Container - 100:30 = 3.33:1 */}
             <div className="relative w-full" style={{ paddingBottom: '30%' }}>
-              {flayers.map((flayer, index) => (
-                <div
-                  key={flayer.id}
-                  className={`absolute inset-0 transition-opacity duration-700 ${
-                    index === currentIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'
-                  }`}
-                >
-                  {flayer.link ? (
-                    <Link href={flayer.link} className="block w-full h-full">
-                      <div className="relative w-full h-full cursor-pointer group/image">
+              {flayers.map((flayer, index) => {
+                const isActive = index === currentIndex;
+                const link = flayer.registration_url || flayer.link;
+                const hasLink = link && link.trim() !== '';
+
+                return (
+                  <div
+                    key={flayer.id}
+                    className={`absolute inset-0 transition-opacity duration-700 ${
+                      isActive ? 'opacity-100 z-10' : 'opacity-0 z-0'
+                    }`}
+                  >
+                    {hasLink ? (
+                      <a
+                        href={link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block w-full h-full cursor-pointer group/image"
+                      >
+                        <div className="relative w-full h-full">
+                          <Image
+                            src={flayer.image}
+                            alt={flayer.title || `Flayer ${index + 1}`}
+                            fill
+                            className="object-cover group-hover/image:scale-105 transition-transform duration-500"
+                            priority={index === 0}
+                          />
+                          {/* Hover Overlay with Info */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0 opacity-0 group-hover/image:opacity-100 transition-opacity duration-300">
+                            <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                              <h3 className="text-xl md:text-2xl font-bold mb-2">{flayer.title}</h3>
+                              {flayer.event_date && flayer.event_location && (
+                                <p className="text-sm md:text-base opacity-90">
+                                  {new Date(flayer.event_date).toLocaleDateString('id-ID', {
+                                    day: 'numeric',
+                                    month: 'long',
+                                    year: 'numeric'
+                                  })} • {flayer.event_location}
+                                </p>
+                              )}
+                              <p className="text-sm mt-2 opacity-75">Klik untuk daftar →</p>
+                            </div>
+                          </div>
+                        </div>
+                      </a>
+                    ) : (
+                      <div className="relative w-full h-full">
                         <Image
                           src={flayer.image}
                           alt={flayer.title || `Flayer ${index + 1}`}
                           fill
-                          className="object-cover group-hover/image:scale-105 transition-transform duration-500"
+                          className="object-cover"
                           priority={index === 0}
                         />
-                        {/* Hover Overlay */}
-                        <div className="absolute inset-0 bg-black/0 group-hover/image:bg-black/10 transition-colors duration-300"></div>
                       </div>
-                    </Link>
-                  ) : (
-                    <div className="relative w-full h-full">
-                      <Image
-                        src={flayer.image}
-                        alt={flayer.title || `Flayer ${index + 1}`}
-                        fill
-                        className="object-cover"
-                        priority={index === 0}
-                      />
-                    </div>
-                  )}
-                </div>
-              ))}
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
 

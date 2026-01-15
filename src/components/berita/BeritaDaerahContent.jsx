@@ -6,6 +6,7 @@ import { getNewsArticles } from '@/lib/api';
 import NewsCard from '@/components/shared/NewsCard';
 import Pagination from '@/components/shared/Pagination';
 import { MapPin } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 export default function BeritaDaerahContent() {
   const searchParams = useSearchParams();
@@ -41,6 +42,7 @@ export default function BeritaDaerahContent() {
         setPagination(paginationData);
       } catch (error) {
         console.error('Error fetching news articles:', error);
+        toast.error('Gagal memuat berita daerah');
         setArticles([]);
         setPagination(null);
       } finally {

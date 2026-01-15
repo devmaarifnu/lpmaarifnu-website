@@ -72,57 +72,15 @@ function buildQueryString(params) {
  * @returns {Promise<Object>} Object with articles array and pagination
  */
 export async function getNewsArticles(params = {}) {
-  try {
-    const queryString = buildQueryString(params);
-    const response = await apiFetch(`/news${queryString}`);
+  const queryString = buildQueryString(params);
+  const response = await apiFetch(`/news${queryString}`);
 
-    // API structure: { success, message, data: { data: {...}, pagination: {...} } }
-    // apiFetch returns data.data, so response = { data: {...}, pagination: {...} }
-    // response.data contains the actual articles
-    return {
-      articles: response.data?.articles || response.articles || [],
-      pagination: response.pagination || {},
-    };
-  } catch (error) {
-    console.error('Error fetching news articles, using mock data:', error);
-    // Return mock data for testing pagination
-    return getMockNewsArticles(params);
-  }
-}
-
-function getMockNewsArticles(params = {}) {
-  const page = params.page || 1;
-  const limit = params.limit || 12;
-  const category = params.category || 'nasional';
-
-  // Generate 50 mock articles
-  const totalArticles = 50;
-  const startIndex = (page - 1) * limit;
-  const endIndex = Math.min(startIndex + limit, totalArticles);
-
-  const articles = [];
-  for (let i = startIndex; i < endIndex; i++) {
-    articles.push({
-      id: i + 1,
-      title: `Berita ${category.charAt(0).toUpperCase() + category.slice(1)} #${i + 1}`,
-      excerpt: `Ini adalah excerpt dari berita ${category} nomor ${i + 1}. Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
-      image: `https://placehold.co/600x400/059669/ffffff?text=Berita+${i + 1}`,
-      published_at: new Date(Date.now() - i * 86400000).toISOString(),
-      slug: `berita-${category}-${i + 1}`,
-      category: { name: category.charAt(0).toUpperCase() + category.slice(1) }
-    });
-  }
-
+  // API structure: { success, message, data: { data: {...}, pagination: {...} } }
+  // apiFetch returns data.data, so response = { data: {...}, pagination: {...} }
+  // response.data contains the actual articles
   return {
-    articles,
-    pagination: {
-      current_page: page,
-      total_pages: Math.ceil(totalArticles / limit),
-      per_page: limit,
-      total: totalArticles,
-      has_next: page < Math.ceil(totalArticles / limit),
-      has_prev: page > 1
-    }
+    articles: response.data?.articles || response.articles || [],
+    pagination: response.pagination || {},
   };
 }
 
@@ -164,62 +122,14 @@ export async function getNewsArticle(slug) {
  * @returns {Promise<Object>} Object with articles array and pagination
  */
 export async function getOpinionArticles(params = {}) {
-  try {
-    const queryString = buildQueryString(params);
-    const response = await apiFetch(`/opinions${queryString}`);
+  const queryString = buildQueryString(params);
+  const response = await apiFetch(`/opinions${queryString}`);
 
-    // API structure: { success, message, data: { data: {...}, pagination: {...} } }
-    // apiFetch returns data.data, so response = { data: {...}, pagination: {...} }
-    return {
-      articles: response.data?.articles || response.articles || [],
-      pagination: response.pagination || {},
-    };
-  } catch (error) {
-    console.error('Error fetching opinion articles, using mock data:', error);
-    return getMockOpinionArticles(params);
-  }
-}
-
-function getMockOpinionArticles(params = {}) {
-  const page = params.page || 1;
-  const limit = params.limit || 10;
-
-  const totalArticles = 35;
-  const startIndex = (page - 1) * limit;
-  const endIndex = Math.min(startIndex + limit, totalArticles);
-
-  const authors = [
-    { name: 'Dr. Ahmad Syafi\'i', title: 'Pakar Pendidikan Islam' },
-    { name: 'Prof. Siti Mahmudah', title: 'Guru Besar UIN Jakarta' },
-    { name: 'KH. Abdul Ghofur', title: 'Ketua LP Ma\'arif NU' }
-  ];
-
-  const articles = [];
-  for (let i = startIndex; i < endIndex; i++) {
-    const author = authors[i % authors.length];
-    articles.push({
-      id: i + 1,
-      title: `Opini Pendidikan Islam #${i + 1}: Membangun Karakter Generasi Muda`,
-      excerpt: `Pendapat dan pandangan tentang pendidikan Islam dari perspektif pakar. Artikel opini nomor ${i + 1}.`,
-      image: `https://placehold.co/800x600/059669/ffffff?text=Opini+${i + 1}`,
-      published_at: new Date(Date.now() - i * 86400000).toISOString(),
-      slug: `opini-pendidikan-${i + 1}`,
-      author_name: author.name,
-      author_title: author.title,
-      author_image: `https://ui-avatars.com/api/?name=${encodeURIComponent(author.name)}&background=059669&color=fff`
-    });
-  }
-
+  // API structure: { success, message, data: { data: {...}, pagination: {...} } }
+  // apiFetch returns data.data, so response = { data: {...}, pagination: {...} }
   return {
-    articles,
-    pagination: {
-      current_page: page,
-      total_pages: Math.ceil(totalArticles / limit),
-      per_page: limit,
-      total: totalArticles,
-      has_next: page < Math.ceil(totalArticles / limit),
-      has_prev: page > 1
-    }
+    articles: response.data?.articles || response.articles || [],
+    pagination: response.pagination || {},
   };
 }
 
@@ -253,76 +163,13 @@ export async function getOpinionArticle(slug) {
  * @returns {Promise<Object>} Object with documents array and pagination
  */
 export async function getDocuments(params = {}) {
-  try {
-    const queryString = buildQueryString(params);
-    const data = await apiFetch(`/documents${queryString}`);
+  const queryString = buildQueryString(params);
+  const data = await apiFetch(`/documents${queryString}`);
 
-    // apiFetch already returns data.data, so data should have documents and pagination directly
-    return {
-      documents: data.data.documents || [],
-      pagination: data.pagination || {},
-    };
-  } catch (error) {
-    console.error('Error fetching documents, using mock data:', error);
-    return getMockDocuments(params);
-  }
-}
-
-function getMockDocuments(params = {}) {
-  const page = params.page || 1;
-  const limit = params.limit || 12;
-  const search = params.search || '';
-  const category = params.category || '';
-
-  const categories = ['Pedoman', 'Kurikulum', 'Regulasi', 'Panduan', 'Formulir'];
-  const fileTypes = ['pdf', 'docx', 'xlsx'];
-
-  let allDocuments = [];
-  for (let i = 0; i < 45; i++) {
-    const cat = categories[i % categories.length];
-    const fileType = fileTypes[i % fileTypes.length];
-    allDocuments.push({
-      id: i + 1,
-      title: `Dokumen ${cat} #${i + 1}`,
-      description: `Deskripsi untuk dokumen ${cat.toLowerCase()} nomor ${i + 1}. Berisi informasi penting terkait ${cat.toLowerCase()}.`,
-      category: { name: cat },
-      file_type: fileType,
-      file_size_formatted: `${Math.floor(Math.random() * 5) + 1}.${Math.floor(Math.random() * 10)} MB`,
-      file_size: (Math.floor(Math.random() * 5) + 1) * 1024 * 1024,
-      uploaded_at: new Date(Date.now() - i * 86400000).toISOString(),
-      created_at: new Date(Date.now() - i * 86400000).toISOString(),
-      download_url: `#download-${i + 1}`
-    });
-  }
-
-  // Filter by search
-  if (search) {
-    allDocuments = allDocuments.filter(doc =>
-      doc.title.toLowerCase().includes(search.toLowerCase()) ||
-      doc.description.toLowerCase().includes(search.toLowerCase())
-    );
-  }
-
-  // Filter by category
-  if (category) {
-    allDocuments = allDocuments.filter(doc => doc.category.name === category);
-  }
-
-  const totalDocuments = allDocuments.length;
-  const startIndex = (page - 1) * limit;
-  const endIndex = Math.min(startIndex + limit, totalDocuments);
-  const documents = allDocuments.slice(startIndex, endIndex);
-
+  // apiFetch already returns data.data, so data should have documents and pagination directly
   return {
-    documents,
-    pagination: {
-      current_page: page,
-      total_pages: Math.ceil(totalDocuments / limit),
-      per_page: limit,
-      total: totalDocuments,
-      has_next: page < Math.ceil(totalDocuments / limit),
-      has_prev: page > 1
-    }
+    documents: data.data.documents || [],
+    pagination: data.pagination || {},
   };
 }
 
@@ -470,18 +317,8 @@ export async function getCategory(slug) {
  * @returns {Promise<Object>} Settings object with site info, contact, social media
  */
 export async function getSettings() {
-  try {
-    const data = await apiFetch('/settings');
-    return data;
-  } catch (error) {
-    console.error('Error fetching settings:', error);
-    return {
-      site_name: 'LP Ma\'arif NU',
-      site_description: 'Lembaga Pendidikan Ma\'arif Nahdlatul Ulama',
-      contact: {},
-      social_media: {},
-    };
-  }
+  const data = await apiFetch('/settings');
+  return data;
 }
 
 // ============================================
@@ -515,96 +352,245 @@ export async function checkHealth() {
  * @returns {Promise<Array>} Array of event flayers
  */
 export async function getEventFlayers(params = {}) {
-  try {
-    const queryString = buildQueryString(params);
-    const data = await apiFetch(`/events/flayers${queryString}`);
-    return data || [];
-  } catch (error) {
-    console.error('Error fetching event flayers (endpoint might not exist yet):', error);
-    // Return mock data as fallback
-    return getMockEventFlayers();
-  }
-}
-
-/**
- * Mock data for event flayers (fallback when API not ready)
- * @returns {Array} Array of mock event flayers
- */
-function getMockEventFlayers() {
-  return [
-    {
-      id: 1,
-      title: 'Seminar Nasional Pendidikan Islam 2024',
-      description: 'Seminar nasional membahas masa depan pendidikan Islam di Indonesia dengan menghadirkan para pakar pendidikan terkemuka.',
-      image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=3000&h=900&fit=crop',
-      link: '/kegiatan/seminar-nasional-2024',
-      event_date: '2024-03-15',
-      location: 'Jakarta Convention Center',
-      is_active: true,
-      order_number: 1,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    },
-    {
-      id: 2,
-      title: 'Workshop Kurikulum Merdeka Ma\'arif',
-      description: 'Workshop intensif implementasi Kurikulum Merdeka khusus untuk guru-guru di lingkungan LP Ma\'arif NU.',
-      image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=3000&h=900&fit=crop',
-      link: '/kegiatan/workshop-kurikulum-merdeka',
-      event_date: '2024-03-20',
-      location: 'Surabaya',
-      is_active: true,
-      order_number: 2,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    },
-    {
-      id: 3,
-      title: 'Festival Kreativitas Siswa Madrasah',
-      description: 'Festival tahunan yang menampilkan berbagai karya kreatif siswa madrasah dari seluruh Indonesia.',
-      image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=3000&h=900&fit=crop',
-      link: '/kegiatan/festival-kreativitas-siswa',
-      event_date: '2024-04-10',
-      location: 'Bandung',
-      is_active: true,
-      order_number: 3,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    },
-    {
-      id: 4,
-      title: 'Pelatihan Kepemimpinan Guru Muda',
-      description: 'Program pelatihan kepemimpinan bagi guru muda untuk mempersiapkan generasi pemimpin pendidikan masa depan.',
-      image: 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=3000&h=900&fit=crop',
-      link: '/kegiatan/pelatihan-kepemimpinan-guru',
-      event_date: '2024-04-25',
-      location: 'Yogyakarta',
-      is_active: true,
-      order_number: 4,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    },
-  ];
+  const queryString = buildQueryString(params);
+  const data = await apiFetch(`/events/flayers${queryString}`);
+  return data || [];
 }
 
 // ============================================
 // LEGACY COMPATIBILITY (for gradual migration)
 // ============================================
 
+// ============================================
+// SATUAN PENDIDIKAN APIs
+// ============================================
+
 /**
- * Legacy: Fetch satuan pendidikan data
- * Note: This endpoint might not exist in the API yet
+ * Fetch satuan pendidikan data with filters and pagination
  * @param {Object} params - Query parameters
- * @returns {Promise<Array>} Array of satpen data
+ * @param {number} params.page - Page number (default: 1)
+ * @param {number} params.limit - Items per page (default: 20, max: 100)
+ * @param {string} params.jenjang - Filter by jenjang (PAUD, RA, MI, MTs, MA, SMK, Pesantren)
+ * @param {string} params.provinsi - Filter by provinsi name
+ * @param {string} params.kabupaten - Filter by kabupaten name
+ * @param {string} params.search - Search by nama or alamat
+ * @param {string} params.akreditasi - Filter by akreditasi (A, B, C, D)
+ * @param {string} params.sort - Sort field (default: -created_at)
+ * @returns {Promise<Object>} Object with satpen array and pagination
  */
 export async function getSatpenData(params = {}) {
   try {
     const queryString = buildQueryString(params);
-    const data = await apiFetch(`/satpen${queryString}`);
+    const response = await apiFetch(`/satpen${queryString}`);
+
+    return {
+      satpen: response.satpen || [],
+      pagination: response.pagination || {},
+      statistics: response.statistics || {}
+    };
+  } catch (error) {
+    console.error('Error fetching satpen data:', error);
+    return {
+      satpen: [],
+      pagination: {},
+      statistics: {}
+    };
+  }
+}
+
+/**
+ * Fetch single satuan pendidikan by ID or NPSN
+ * @param {string|number} id - Satpen ID or NPSN
+ * @returns {Promise<Object|null>} Satpen object or null
+ */
+export async function getSatpenById(id) {
+  try {
+    const data = await apiFetch(`/satpen/${id}`);
+    return data;
+  } catch (error) {
+    console.error('Error fetching satpen:', error);
+    return null;
+  }
+}
+
+/**
+ * Fetch satpen statistics
+ * @param {Object} params - Query parameters
+ * @param {string} params.provinsi - Filter by provinsi name
+ * @param {string} params.jenjang - Filter by jenjang
+ * @returns {Promise<Object>} Statistics object
+ */
+export async function getSatpenStatistics(params = {}) {
+  try {
+    const queryString = buildQueryString(params);
+    const data = await apiFetch(`/satpen/statistics${queryString}`);
+    return data;
+  } catch (error) {
+    console.error('Error fetching satpen statistics:', error);
+    return {};
+  }
+}
+
+// ============================================
+// MASTER DATA - PROVINSI APIs
+// ============================================
+
+/**
+ * Fetch all provinsi
+ * @param {Object} params - Query parameters
+ * @param {string} params.search - Search by nama provinsi
+ * @returns {Promise<Array>} Array of provinsi
+ */
+export async function getProvinsi(params = {}) {
+  try {
+    const queryString = buildQueryString(params);
+    const data = await apiFetch(`/provinsi${queryString}`);
     return data || [];
   } catch (error) {
-    console.error('Error fetching satpen data (endpoint might not exist):', error);
-    // Return empty array if endpoint doesn't exist yet
+    console.error('Error fetching provinsi:', error);
     return [];
+  }
+}
+
+/**
+ * Fetch provinsi by ID
+ * @param {number} id - Provinsi ID
+ * @returns {Promise<Object|null>} Provinsi object or null
+ */
+export async function getProvinsiById(id) {
+  try {
+    const data = await apiFetch(`/provinsi/${id}`);
+    return data;
+  } catch (error) {
+    console.error('Error fetching provinsi:', error);
+    return null;
+  }
+}
+
+// ============================================
+// MASTER DATA - KABUPATEN APIs
+// ============================================
+
+/**
+ * Fetch all kabupaten
+ * @param {Object} params - Query parameters
+ * @param {number} params.provinsi_id - Filter by provinsi ID
+ * @param {string} params.search - Search by nama kabupaten
+ * @returns {Promise<Array>} Array of kabupaten
+ */
+export async function getKabupaten(params = {}) {
+  try {
+    const queryString = buildQueryString(params);
+    const data = await apiFetch(`/kabupaten${queryString}`);
+    return data || [];
+  } catch (error) {
+    console.error('Error fetching kabupaten:', error);
+    return [];
+  }
+}
+
+/**
+ * Fetch kabupaten by ID
+ * @param {number} id - Kabupaten ID
+ * @returns {Promise<Object|null>} Kabupaten object or null
+ */
+export async function getKabupatenById(id) {
+  try {
+    const data = await apiFetch(`/kabupaten/${id}`);
+    return data;
+  } catch (error) {
+    console.error('Error fetching kabupaten:', error);
+    return null;
+  }
+}
+
+/**
+ * Get available jenjang options from statistics
+ * @returns {Promise<Array>} Array of jenjang names
+ */
+export async function getJenjangOptions() {
+  try {
+    const stats = await getSatpenStatistics();
+    if (stats.by_jenjang) {
+      return Object.keys(stats.by_jenjang);
+    }
+    return [];
+  } catch (error) {
+    console.error('Error fetching jenjang options:', error);
+    // Fallback to default options
+    return ['PAUD', 'RA', 'MI', 'MTs', 'MA', 'SMK', 'Pesantren'];
+  }
+}
+
+// ============================================
+// EDITORIAL TEAM APIs
+// ============================================
+
+/**
+ * Fetch editorial team structure
+ * @returns {Promise<Object>} Editorial team object
+ */
+export async function getEditorialTeam() {
+  const data = await apiFetch('/editorial/team');
+  return data;
+}
+
+// ============================================
+// ORGANIZATION PENGURUS APIs
+// ============================================
+
+/**
+ * Fetch organization pengurus list
+ * @param {Object} params - Query parameters
+ * @param {string} params.periode - Filter by periode (e.g., "2024-2029")
+ * @param {string} params.kategori - Filter by kategori (pimpinan_utama, bidang, sekretariat, bendahara)
+ * @param {boolean} params.active - Filter active members only (default: true)
+ * @returns {Promise<Object>} Object with periode and pengurus array
+ */
+export async function getPengurus(params = {}) {
+  const queryString = buildQueryString(params);
+  const data = await apiFetch(`/organization/pengurus${queryString}`);
+  return data;
+}
+
+// ============================================
+// CONTACT FORM API
+// ============================================
+
+/**
+ * Submit contact form
+ * @param {Object} formData - Contact form data
+ * @param {string} formData.name - Name (required, min 3 chars)
+ * @param {string} formData.email - Email (required, valid email)
+ * @param {string} formData.phone - Phone (optional, max 20 chars)
+ * @param {string} formData.subject - Subject (required, min 5 chars)
+ * @param {string} formData.message - Message (required, min 10 chars)
+ * @returns {Promise<Object>} Response with ticket_id
+ */
+export async function submitContactForm(formData) {
+  try {
+    const url = `${BASE_URL}/contact/submit`;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (!response.ok) {
+      throw new Error(`API Error: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    if (!data.success) {
+      throw new Error(data.message || 'Failed to submit contact form');
+    }
+
+    return data.data;
+  } catch (error) {
+    console.error('Contact Form Submit Error:', error);
+    throw error;
   }
 }

@@ -187,7 +187,23 @@ export default async function OpiniDetailPage({ params }) {
             {/* Article Content */}
             <div className="bg-white rounded-xl shadow-sm p-8 md:p-12 mb-8">
               <div
-                className="prose prose-lg max-w-none prose-headings:font-bold prose-headings:text-neutral-900 prose-p:text-neutral-700 prose-p:leading-relaxed prose-a:text-primary-600 prose-a:no-underline hover:prose-a:underline prose-img:rounded-lg prose-strong:text-neutral-900 prose-ul:text-neutral-700 prose-ol:text-neutral-700"
+                className="prose prose-lg max-w-none
+                  prose-headings:font-bold prose-headings:!text-neutral-900
+                  prose-h1:!text-neutral-900 prose-h2:!text-neutral-900 prose-h3:!text-neutral-900
+                  prose-h4:!text-neutral-900 prose-h5:!text-neutral-900 prose-h6:!text-neutral-900
+                  prose-p:!text-neutral-900 prose-p:leading-relaxed
+                  prose-a:!text-primary-600 prose-a:no-underline hover:prose-a:underline
+                  prose-img:rounded-lg
+                  prose-strong:!text-neutral-900
+                  prose-ul:!text-neutral-900
+                  prose-ol:!text-neutral-900
+                  prose-li:!text-neutral-900
+                  [&_h1]:!text-neutral-900 [&_h2]:!text-neutral-900 [&_h3]:!text-neutral-900
+                  [&_h4]:!text-neutral-900 [&_h5]:!text-neutral-900 [&_h6]:!text-neutral-900
+                  [&>p]:!text-neutral-900 [&_p]:!text-neutral-900
+                  [&>ul]:!text-neutral-900 [&_ul]:!text-neutral-900
+                  [&>ol]:!text-neutral-900 [&_ol]:!text-neutral-900
+                  [&>li]:!text-neutral-900 [&_li]:!text-neutral-900"
                 dangerouslySetInnerHTML={{ __html: displayArticle.content }}
               />
             </div>

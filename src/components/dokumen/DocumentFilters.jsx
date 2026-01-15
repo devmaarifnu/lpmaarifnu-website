@@ -73,7 +73,7 @@ export default function DocumentFilters({ searchTerm = '', selectedCategory = ''
                 placeholder="Cari dokumen..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full pl-10 pr-4 py-2.5 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-neutral-900 placeholder:text-neutral-500"
               />
             </div>
           </div>
@@ -83,7 +83,7 @@ export default function DocumentFilters({ searchTerm = '', selectedCategory = ''
             <select
               value={category}
               onChange={(e) => handleCategoryChange(e.target.value)}
-              className="w-full md:w-48 px-4 py-2.5 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full md:w-48 px-4 py-2.5 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-neutral-900"
             >
               {categoryOptions.map((cat) => (
                 <option key={cat} value={cat}>

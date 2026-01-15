@@ -8,6 +8,7 @@ import { formatDate } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import Pagination from '@/components/shared/Pagination';
 import DocumentFilters from '@/components/dokumen/DocumentFilters';
+import toast from 'react-hot-toast';
 
 const getFileIcon = (fileType) => {
   switch (fileType.toLowerCase()) {
@@ -50,6 +51,7 @@ export default function DokumenContent() {
         setPagination(paginationData);
       } catch (error) {
         console.error('Error fetching documents:', error);
+        toast.error('Gagal memuat dokumen');
         setDocuments([]);
         setPagination(null);
       } finally {

@@ -2,9 +2,9 @@
 
 import PropTypes from 'prop-types';
 import { MapPin, Phone, Mail } from 'lucide-react';
-import { contactInfo, organizationInfo } from '@/data/menu-config';
 import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
+import { getSettings } from '@/lib/api';
 
 /**
  * Header Component with logo and contact information
@@ -14,6 +14,8 @@ import { useEffect, useState } from 'react';
  */
 export default function Header({ transparent = false, fixed = false }) {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [settings, setSettings] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,6 +25,45 @@ export default function Header({ transparent = false, fixed = false }) {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const data = await getSettings();
+        setSettings(data);
+      } catch (error) {
+        console.error('Error fetching settings:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchSettings();
+  }, []);
+
+  // Only use API data
+  const contact = settings?.contact || {};
+  const siteName = settings?.site_name || 'LP Ma\'arif NU PBNU';
+
+  // Don't render if no settings loaded yet
+  if (isLoading || !settings) {
+    return (
+      <header
+        className={cn(
+          'w-full transition-all duration-300 z-40',
+          !transparent ? 'bg-primary-600' : 'bg-transparent',
+          isScrolled ? 'transform -translate-y-full opacity-0' : 'transform translate-y-0 opacity-100'
+        )}
+      >
+        <div className="container mx-auto">
+          <div className="flex flex-col md:flex-row items-center justify-between py-4 md:py-3 gap-4">
+            <div className="h-14 animate-pulse bg-primary-700/50 rounded w-64"></div>
+            <div className="h-8 animate-pulse bg-primary-700/50 rounded w-96"></div>
+          </div>
+        </div>
+      </header>
+    );
+  }
 
   return (
     <header
@@ -41,7 +82,7 @@ export default function Header({ transparent = false, fixed = false }) {
             </div>
             <div className="flex flex-col text-white">
               <span className="font-bold text-lg md:text-xl font-poppins">
-                {organizationInfo.name}
+                {siteName}
               </span>
               <span className="text-xs md:text-sm text-primary-100 hidden sm:block">
                 Lembaga Pendidikan Ma&apos;arif NU
@@ -51,35 +92,41 @@ export default function Header({ transparent = false, fixed = false }) {
 
           {/* Contact Information */}
           <div className="flex flex-col sm:flex-row items-center gap-3 md:gap-6 text-white text-sm">
-            <div className="flex items-center gap-2 group">
-              <MapPin className="w-4 h-4 text-primary-100 group-hover:text-white transition-colors" />
-              <span className="text-primary-50 group-hover:text-white transition-colors hidden lg:block">
-                {contactInfo.alamat}
-              </span>
-              <span className="text-primary-50 group-hover:text-white transition-colors lg:hidden">
-                Jakarta Pusat
-              </span>
-            </div>
+            {contact.address && (
+              <div className="flex items-center gap-2 group">
+                <MapPin className="w-4 h-4 text-primary-100 group-hover:text-white transition-colors" />
+                <span className="text-primary-50 group-hover:text-white transition-colors hidden lg:block">
+                  {contact.address}
+                </span>
+                <span className="text-primary-50 group-hover:text-white transition-colors lg:hidden">
+                  {contact.address.split(',')[0] || contact.address}
+                </span>
+              </div>
+            )}
 
-            <div className="flex items-center gap-2 group">
-              <Phone className="w-4 h-4 text-primary-100 group-hover:text-white transition-colors" />
-              <a
-                href={`tel:${contactInfo.telepon.replace(/\s/g, '')}`}
-                className="text-primary-50 group-hover:text-white transition-colors"
-              >
-                {contactInfo.telepon}
-              </a>
-            </div>
+            {contact.phone && (
+              <div className="flex items-center gap-2 group">
+                <Phone className="w-4 h-4 text-primary-100 group-hover:text-white transition-colors" />
+                <a
+                  href={`tel:${contact.phone.replace(/\s/g, '')}`}
+                  className="text-primary-50 group-hover:text-white transition-colors"
+                >
+                  {contact.phone}
+                </a>
+              </div>
+            )}
 
-            <div className="flex items-center gap-2 group">
-              <Mail className="w-4 h-4 text-primary-100 group-hover:text-white transition-colors" />
-              <a
-                href={`mailto:${contactInfo.email}`}
-                className="text-primary-50 group-hover:text-white transition-colors"
-              >
-                {contactInfo.email}
-              </a>
-            </div>
+            {contact.email && (
+              <div className="flex items-center gap-2 group">
+                <Mail className="w-4 h-4 text-primary-100 group-hover:text-white transition-colors" />
+                <a
+                  href={`mailto:${contact.email}`}
+                  className="text-primary-50 group-hover:text-white transition-colors"
+                >
+                  {contact.email}
+                </a>
+              </div>
+            )}
           </div>
         </div>
       </div>

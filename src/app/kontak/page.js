@@ -9,54 +9,14 @@ export const metadata = {
 };
 
 export default async function KontakPage() {
-  // Mock/Fallback data - akan digantikan dengan data dari API Settings
-  const mockSettings = {
-    site_name: 'LP Ma\'arif NU',
-    contact: {
-      address: 'Jl. Kramat Raya No. 45, Jakarta Pusat 10450, DKI Jakarta',
-      phone: '(021) 3920679',
-      email: 'info@lpmaarifnu.or.id',
-      website: 'www.lpmaarifnu.or.id',
-      maps_embed: '', // Akan diisi dengan embed URL dari Google Maps
-      office_hours: {
-        weekdays: '08:00 - 16:00 WIB',
-        friday: '08:00 - 16:30 WIB',
-        saturday: '08:00 - 14:00 WIB',
-        sunday: 'Tutup',
-      },
-      office_notes: 'Pada hari libur nasional, kantor tutup',
-    },
-    social_media: {
-      facebook: 'https://facebook.com/lpmaarifnu',
-      twitter: 'https://twitter.com/lpmaarifnu',
-      instagram: 'https://instagram.com/lpmaarifnu',
-      youtube: 'https://youtube.com/@lpmaarifnu',
-    },
-  };
-
   // Fetch settings for contact information from API
-  let settings = mockSettings;
+  let settings = null;
 
   try {
-    const data = await getSettings();
-    if (data) {
-      // Merge API data with mock data (API data takes precedence)
-      settings = {
-        ...mockSettings,
-        ...data,
-        contact: {
-          ...mockSettings.contact,
-          ...data.contact,
-        },
-        social_media: {
-          ...mockSettings.social_media,
-          ...data.social_media,
-        },
-      };
-    }
+    settings = await getSettings();
   } catch (error) {
     console.error('Error fetching settings:', error);
-    // Use mock data as fallback
+    // If API fails, settings will be null and we'll show appropriate fallback UI
   }
 
   return (
@@ -98,7 +58,13 @@ export default async function KontakPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Contact Information - Left Side */}
             <div className="lg:col-span-1 space-y-6">
-              <ContactInfo settings={settings} />
+              {settings ? (
+                <ContactInfo settings={settings} />
+              ) : (
+                <div className="bg-white rounded-lg shadow-md p-6">
+                  <p className="text-neutral-600">Gagal memuat informasi kontak. Silakan coba lagi nanti.</p>
+                </div>
+              )}
             </div>
 
             {/* Contact Form - Right Side */}
@@ -134,7 +100,7 @@ export default async function KontakPage() {
           {/* Google Maps Embed */}
           <div className="rounded-lg overflow-hidden shadow-lg">
             <div className="w-full h-96 bg-neutral-200 relative">
-              {settings.contact?.maps_embed ? (
+              {settings?.contact?.maps_embed ? (
                 <iframe
                   src={settings.contact.maps_embed}
                   width="100%"
@@ -149,7 +115,7 @@ export default async function KontakPage() {
                 <div className="flex items-center justify-center h-full">
                   <div className="text-center">
                     <MapPin className="w-16 h-16 text-neutral-400 mx-auto mb-4" />
-                    <p className="text-neutral-500">Map will be displayed here</p>
+                    <p className="text-neutral-500">{settings ? 'Map will be displayed here' : 'Gagal memuat peta'}</p>
                   </div>
                 </div>
               )}
@@ -159,70 +125,72 @@ export default async function KontakPage() {
       </section>
 
       {/* Office Hours Section */}
-      <section className="py-12 md:py-16 bg-neutral-50">
-        <div className="container mx-auto">
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-white rounded-lg shadow-md p-6 md:p-8">
-              <div className="flex items-start gap-4 mb-6">
-                <div className="bg-primary-100 p-3 rounded-lg">
-                  <Clock className="w-6 h-6 text-primary-600" />
+      {settings?.contact?.office_hours && (
+        <section className="py-12 md:py-16 bg-neutral-50">
+          <div className="container mx-auto">
+            <div className="max-w-4xl mx-auto">
+              <div className="bg-white rounded-lg shadow-md p-6 md:p-8">
+                <div className="flex items-start gap-4 mb-6">
+                  <div className="bg-primary-100 p-3 rounded-lg">
+                    <Clock className="w-6 h-6 text-primary-600" />
+                  </div>
+                  <div>
+                    <h2 className="font-bold text-neutral-900 mb-2" style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)' }}>
+                      Jam Operasional
+                    </h2>
+                    <p className="text-neutral-600">
+                      Kantor kami buka pada jam kerja berikut
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h2 className="font-bold text-neutral-900 mb-2" style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)' }}>
-                    Jam Operasional
-                  </h2>
-                  <p className="text-neutral-600">
-                    Kantor kami buka pada jam kerja berikut
-                  </p>
-                </div>
-              </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-4 bg-neutral-50 rounded-lg">
-                  <div className="font-semibold text-neutral-900 mb-2">
-                    Senin - Kamis
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="p-4 bg-neutral-50 rounded-lg">
+                    <div className="font-semibold text-neutral-900 mb-2">
+                      Senin - Kamis
+                    </div>
+                    <div className="text-neutral-600">
+                      {settings.contact?.office_hours?.weekdays}
+                    </div>
                   </div>
-                  <div className="text-neutral-600">
-                    {settings.contact?.office_hours?.weekdays}
+                  <div className="p-4 bg-neutral-50 rounded-lg">
+                    <div className="font-semibold text-neutral-900 mb-2">
+                      Jumat
+                    </div>
+                    <div className="text-neutral-600">
+                      {settings.contact?.office_hours?.friday}
+                    </div>
+                  </div>
+                  <div className="p-4 bg-neutral-50 rounded-lg">
+                    <div className="font-semibold text-neutral-900 mb-2">
+                      Sabtu
+                    </div>
+                    <div className="text-neutral-600">
+                      {settings.contact?.office_hours?.saturday}
+                    </div>
+                  </div>
+                  <div className="p-4 bg-neutral-50 rounded-lg">
+                    <div className="font-semibold text-neutral-900 mb-2">
+                      Minggu & Hari Libur
+                    </div>
+                    <div className="text-neutral-600">
+                      {settings.contact?.office_hours?.sunday}
+                    </div>
                   </div>
                 </div>
-                <div className="p-4 bg-neutral-50 rounded-lg">
-                  <div className="font-semibold text-neutral-900 mb-2">
-                    Jumat
-                  </div>
-                  <div className="text-neutral-600">
-                    {settings.contact?.office_hours?.friday}
-                  </div>
-                </div>
-                <div className="p-4 bg-neutral-50 rounded-lg">
-                  <div className="font-semibold text-neutral-900 mb-2">
-                    Sabtu
-                  </div>
-                  <div className="text-neutral-600">
-                    {settings.contact?.office_hours?.saturday}
-                  </div>
-                </div>
-                <div className="p-4 bg-neutral-50 rounded-lg">
-                  <div className="font-semibold text-neutral-900 mb-2">
-                    Minggu & Hari Libur
-                  </div>
-                  <div className="text-neutral-600">
-                    {settings.contact?.office_hours?.sunday}
-                  </div>
-                </div>
-              </div>
 
-              {settings.contact?.office_notes && (
-                <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
-                  <p className="text-sm text-amber-800">
-                    <strong>Catatan:</strong> {settings.contact.office_notes}
-                  </p>
-                </div>
-              )}
+                {settings.contact?.office_notes && (
+                  <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                    <p className="text-sm text-amber-800">
+                      <strong>Catatan:</strong> {settings.contact.office_notes}
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </div>
   );
 }

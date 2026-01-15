@@ -3,11 +3,7 @@ import { Award, Calendar, Users, Target } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import BatikPattern from '@/components/shared/BatikPattern';
 import { getPage } from '@/lib/api';
-
-export const metadata = {
-  title: 'Pramuka Ma\'arif',
-  description: 'Gerakan Pramuka di lingkungan satuan pendidikan LP Ma\'arif NU',
-};
+import { notFound } from 'next/navigation';
 
 // Icon mapping for programs
 const iconMap = {
@@ -17,85 +13,40 @@ const iconMap = {
   'calendar': Calendar,
 };
 
-// Fallback data
-const fallbackAchievements = [
-  {
-    title: 'Juara Umum Jambore Nasional 2023',
-    description: 'Kontingen LP Ma\'arif NU meraih juara umum dalam Jambore Nasional Pramuka 2023',
-    image: 'https://images.unsplash.com/photo-1519995451813-39e29e054914?w=800&h=600&fit=crop',
-    date: '2023-08-15',
-  },
-  {
-    title: 'Pelatihan Instruktur Nasional',
-    description: 'Mengadakan pelatihan instruktur pramuka tingkat nasional dengan 500 peserta',
-    image: 'https://images.unsplash.com/photo-1529390079861-591de354faf5?w=800&h=600&fit=crop',
-    date: '2023-10-20',
-  },
-  {
-    title: 'Bakti Sosial Lingkungan',
-    description: 'Program tanam 10.000 pohon oleh gerakan pramuka Ma\'arif se-Indonesia',
-    image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&h=600&fit=crop',
-    date: '2024-03-12',
-  },
-];
-
-const fallbackPrograms = [
-  {
-    icon: 'target',
-    title: 'Pembinaan Karakter',
-    description: 'Program pembinaan karakter melalui kegiatan kepramukaan yang terintegrasi dengan nilai-nilai Islam',
-  },
-  {
-    icon: 'users',
-    title: 'Pelatihan Kepemimpinan',
-    description: 'Mengembangkan jiwa kepemimpinan dan kemampuan organisasi siswa',
-  },
-  {
-    icon: 'award',
-    title: 'Kompetisi & Lomba',
-    description: 'Mengikuti berbagai kompetisi kepramukaan tingkat daerah hingga nasional',
-  },
-  {
-    icon: 'calendar',
-    title: 'Kegiatan Rutin',
-    description: 'Latihan rutin, perkemahan, dan kegiatan sosial berkelanjutan',
-  },
-];
-
 export default async function PramukaPage() {
   // Fetch pramuka data from API
-  const pageData = await getPage('pramuka');
+  const page = await getPage('pramuka');
 
-  // Extract data from API with fallbacks
-  const heroTitle = pageData?.content?.hero?.title || 'Gerakan Pramuka Ma\'arif NU';
-  const heroDescription = pageData?.content?.hero?.description || 'Membentuk karakter pemuda yang berakhlak mulia, cinta tanah air, dan berwawasan keislaman';
+  const pageData = page.content.content;
+
+  // Extract data from API - pageData already contains hero, about, etc.
+  const { hero, about, programs, achievements, cta } = pageData;
+
+  const heroTitle = hero.title;
+  const heroDescription = hero.description;
 
   // About section
-  const aboutTitle = pageData?.content?.about?.title || 'Tentang Pramuka Ma\'arif';
-  const aboutParagraphs = pageData?.content?.about?.paragraphs || [
-    'Gerakan Pramuka di lingkungan satuan pendidikan LP Ma\'arif NU merupakan wadah pembinaan karakter dan kepribadian siswa yang berlandaskan nilai-nilai Pancasila dan Ahlussunnah Wal Jama\'ah an-Nahdliyyah.',
-    'Melalui berbagai kegiatan kepramukaan, kami membentuk generasi muda yang memiliki jiwa kepemimpinan, tanggung jawab, dan kepedulian terhadap sesama dan lingkungan.',
-    'Dengan jaringan lebih dari 5.000 gugus depan di seluruh Indonesia, Pramuka Ma\'arif aktif dalam berbagai kegiatan nasional dan internasional.'
-  ];
-  const aboutImage = pageData?.content?.about?.image || 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800&h=600&fit=crop';
+  const aboutTitle = about.title;
+  const aboutParagraphs = about.paragraphs || [];
+  const aboutImage = about.image;
 
   // Programs section
-  const programsTitle = pageData?.content?.programs?.title || 'Program Unggulan';
-  const programsDescription = pageData?.content?.programs?.description || 'Berbagai program pembinaan yang dirancang untuk mengembangkan potensi siswa';
-  const programsList = pageData?.content?.programs?.list?.map(program => ({
+  const programsTitle = programs.title;
+  const programsDescription = programs.description;
+  const programsList = (programs.list || []).map(program => ({
     icon: iconMap[program.icon] || Target,
     title: program.title,
     description: program.description,
-  })) || fallbackPrograms.map(p => ({ ...p, icon: iconMap[p.icon] }));
+  }));
 
   // Achievements section
-  const achievementsTitle = pageData?.content?.achievements?.title || 'Prestasi & Kegiatan';
-  const achievementsDescription = pageData?.content?.achievements?.description || 'Pencapaian membanggakan dari gerakan pramuka Ma\'arif NU';
-  const achievementsList = pageData?.content?.achievements?.list || fallbackAchievements;
+  const achievementsTitle = achievements.title;
+  const achievementsDescription = achievements.description;
+  const achievementsList = achievements.list || [];
 
   // CTA section
-  const ctaTitle = pageData?.content?.cta?.title || 'Bergabung dengan Pramuka Ma\'arif NU';
-  const ctaDescription = pageData?.content?.cta?.description || 'Mari bersama membangun karakter generasi muda yang berakhlak mulia dan cinta tanah air';
+  const ctaTitle = cta.title;
+  const ctaDescription = cta.description;
 
   return (
     <div className="min-h-screen bg-neutral-50">

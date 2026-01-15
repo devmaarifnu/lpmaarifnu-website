@@ -6,11 +6,12 @@ import { getNewsArticles } from '@/lib/api';
 import NewsCard from '@/components/shared/NewsCard';
 import Pagination from '@/components/shared/Pagination';
 import { Newspaper } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 export default function BeritaNasionalContent() {
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams.get('page')) || 1;
-  const limit = 2;
+  const limit = 12;
 
   const [articles, setArticles] = useState([]);
   const [pagination, setPagination] = useState(null);
@@ -41,6 +42,7 @@ export default function BeritaNasionalContent() {
         setPagination(paginationData);
       } catch (error) {
         console.error('Error fetching news articles:', error);
+        toast.error('Gagal memuat berita nasional');
         setArticles([]);
         setPagination(null);
       } finally {

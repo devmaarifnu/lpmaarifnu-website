@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { submitContactForm } from '@/lib/api';
+import toast from 'react-hot-toast';
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -47,9 +49,8 @@ export default function ContactForm() {
       newErrors.email = 'Format email tidak valid';
     }
 
-    if (!formData.phone.trim()) {
-      newErrors.phone = 'Nomor telepon wajib diisi';
-    } else if (!/^[\d\s\-\+\(\)]+$/.test(formData.phone)) {
+    // Phone is optional according to API
+    if (formData.phone.trim() && !/^[\d\s\-\+\(\)]+$/.test(formData.phone)) {
       newErrors.phone = 'Format nomor telepon tidak valid';
     }
 
@@ -79,13 +80,12 @@ export default function ContactForm() {
     setResponseMessage('');
 
     try {
-      // TODO: Replace with actual API endpoint when ready
-      // For now, simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const result = await submitContactForm(formData);
 
-      // Simulate success
       setStatus('success');
-      setResponseMessage('Terima kasih! Pesan Anda telah berhasil dikirim. Kami akan segera menghubungi Anda.');
+      setResponseMessage(`Terima kasih! Pesan Anda telah berhasil dikirim dengan Ticket ID: ${result.ticket_id}. Kami akan segera menghubungi Anda.`);
+
+      toast.success('Pesan berhasil dikirim!');
 
       // Reset form
       setFormData({
@@ -96,46 +96,17 @@ export default function ContactForm() {
         message: '',
       });
 
-      // Reset success message after 5 seconds
+      // Reset success message after 8 seconds
       setTimeout(() => {
         setStatus('idle');
         setResponseMessage('');
-      }, 5000);
-
-      // TODO: Uncomment when API is ready
-      /*
-      const response = await fetch('/api/v1/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Gagal mengirim pesan');
-      }
-
-      setStatus('success');
-      setResponseMessage(data.message || 'Pesan berhasil dikirim');
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        subject: '',
-        message: '',
-      });
-
-      setTimeout(() => {
-        setStatus('idle');
-        setResponseMessage('');
-      }, 5000);
-      */
+      }, 8000);
     } catch (error) {
+      console.error('Contact form error:', error);
       setStatus('error');
       setResponseMessage(error.message || 'Terjadi kesalahan. Silakan coba lagi.');
+
+      toast.error('Gagal mengirim pesan. Silakan coba lagi.');
 
       setTimeout(() => {
         setStatus('idle');
@@ -210,7 +181,7 @@ export default function ContactForm() {
         {/* Phone */}
         <div>
           <label htmlFor="phone" className="block text-sm font-semibold text-neutral-700 mb-2">
-            Nomor Telepon <span className="text-red-500">*</span>
+            Nomor Telepon <span className="text-neutral-400">(opsional)</span>
           </label>
           <input
             type="tel"
