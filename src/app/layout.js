@@ -12,17 +12,18 @@ export const metadata = {
   description: "Lembaga Pendidikan Ma'arif Nahdlatul Ulama Pengurus Besar Nahdlatul Ulama - Berkomitmen mengembangkan pendidikan Islam berkualitas di Indonesia",
   keywords: ["LP Maarif NU", "Pendidikan NU", "Nahdlatul Ulama", "Pendidikan Islam", "Ma'arif NU"],
   authors: [{ name: "LP Ma'arif NU PBNU" }],
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5,
-    userScalable: true,
-  },
   openGraph: {
     type: "website",
     locale: "id_ID",
     siteName: "LP Ma'arif NU PBNU",
   },
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
 };
 
 export default function RootLayout({ children }) {

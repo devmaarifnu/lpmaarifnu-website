@@ -10,11 +10,17 @@ import ShareButtons from '@/components/article/ShareButtons';
 export async function generateStaticParams() {
   try {
     const { articles } = await getNewsArticles({ limit: 100 });
+    if (!articles || articles.length === 0) {
+      // Return at least one fallback to prevent build error
+      return [{ slug: 'placeholder' }];
+    }
     return articles.map((article) => ({
       slug: article.slug,
     }));
   } catch (error) {
-    return [];
+    console.error('Error generating static params for berita:', error);
+    // Return at least one fallback to prevent build error
+    return [{ slug: 'placeholder' }];
   }
 }
 

@@ -3,10 +3,7 @@
  * Connects to the backend Go API
  */
 
-// API Configuration
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
-const API_VERSION = '/api/v1';
-const BASE_URL = `${API_BASE_URL}${API_VERSION}`;
+import { getBaseURL } from './api-config';
 
 /**
  * Generic fetch wrapper with error handling
@@ -16,7 +13,10 @@ const BASE_URL = `${API_BASE_URL}${API_VERSION}`;
  */
 async function apiFetch(endpoint, options = {}) {
   try {
-    const url = `${BASE_URL}${endpoint}`;
+    // Get the appropriate base URL based on the endpoint
+    const baseURL = getBaseURL(endpoint);
+    const url = `${baseURL}${endpoint}`;
+
     const response = await fetch(url, {
       ...options,
       headers: {
@@ -331,7 +331,9 @@ export async function getSettings() {
  */
 export async function checkHealth() {
   try {
-    const response = await fetch(`${API_BASE_URL}/health`);
+    // Use the site base URL for health check
+    const baseURL = getBaseURL('/health');
+    const response = await fetch(`${baseURL}/health`);
     const data = await response.json();
     return data;
   } catch (error) {
@@ -569,7 +571,9 @@ export async function getPengurus(params = {}) {
  */
 export async function submitContactForm(formData) {
   try {
-    const url = `${BASE_URL}/contact/submit`;
+    const baseURL = getBaseURL('/contact/submit');
+    const url = `${baseURL}/contact/submit`;
+
     const response = await fetch(url, {
       method: 'POST',
       headers: {

@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import BeritaNasionalContent from '@/components/berita/BeritaNasionalContent';
 import { Newspaper } from 'lucide-react';
 import BatikPattern from '@/components/shared/BatikPattern';
@@ -29,7 +30,18 @@ export default function BeritaNasionalPage() {
       </section>
 
       {/* Content Section */}
-      <BeritaNasionalContent />
+      <Suspense fallback={
+        <section className="py-12 md:py-16">
+          <div className="container mx-auto">
+            <div className="text-center py-16">
+              <div className="animate-spin w-12 h-12 border-4 border-primary-600 border-t-transparent rounded-full mx-auto mb-4" />
+              <p className="text-neutral-600">Memuat berita...</p>
+            </div>
+          </div>
+        </section>
+      }>
+        <BeritaNasionalContent />
+      </Suspense>
     </div>
   );
 }

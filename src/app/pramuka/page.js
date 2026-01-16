@@ -17,7 +17,12 @@ export default async function PramukaPage() {
   // Fetch pramuka data from API
   const page = await getPage('pramuka');
 
-  const pageData = page.content.content;
+  // Handle null or missing content
+  if (!page || !page.content) {
+    notFound();
+  }
+
+  const pageData = page.content.content || page.content;
 
   // Extract data from API - pageData already contains hero, about, etc.
   const { hero, about, programs, achievements, cta } = pageData;

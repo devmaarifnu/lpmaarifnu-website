@@ -28,6 +28,9 @@ export function formatDate(date, options = { dateStyle: 'long' }) {
 
     if (date instanceof Date) {
       dateObj = date;
+    } else if (typeof date === 'object' && date.Time) {
+      // Handle Go's sql.NullTime format: {Time: "2026-01-12T14:22:18+07:00", Valid: true}
+      dateObj = new Date(date.Time);
     } else if (typeof date === 'string' || typeof date === 'number') {
       dateObj = new Date(date);
     } else {

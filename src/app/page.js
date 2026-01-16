@@ -1,12 +1,6 @@
-import HeroSlider from '@/components/home/HeroSlider';
-import BeritaTerbaruSection from '@/components/home/BeritaTerbaruSection';
-import FlayerSection from '@/components/home/FlayerSection';
-import NewsCard from '@/components/shared/NewsCard';
-import { Button } from '@/components/ui/button';
-import { getHeroSlides, getFeaturedNews, getOpinionArticles, getEventFlayers } from '@/lib/api';
-import { transformArticles } from '@/lib/utils';
-
+import HomeContent from '@/components/home/HomeContent';
 import { Newspaper, GraduationCap, Users, FileText } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 // Features data
 const features = [
@@ -44,31 +38,11 @@ const features = [
   },
 ];
 
-export default async function Home() {
-  // Fetch data from API with error handling
-  let heroSlides = [];
-  let featuredNews = [];
-  let opinionArticles = [];
-  let flayerData = [];
-
-  try {
-    heroSlides = await getHeroSlides();
-    featuredNews = await getFeaturedNews(4);
-    const opinionData = await getOpinionArticles({ limit: 5 });
-    opinionArticles = opinionData.articles || [];
-    flayerData = await getEventFlayers({ limit: 10, active: true });
-  } catch (error) {
-    console.error('Error fetching home page data:', error);
-  }
-
-  // Transform API data using utility function for safe transformation
-  const headlineNews = transformArticles(featuredNews, 'Berita');
-  const latestNews = transformArticles(opinionArticles, 'Opini');
-
+export default function Home() {
   return (
     <>
-      {/* Hero Slider */}
-      <HeroSlider slides={heroSlides} />
+      {/* Home Content - Client-side rendered */}
+      <HomeContent />
 
       {/* Features Section */}
       <section className="py-12 md:py-16 bg-neutral-50">
@@ -94,31 +68,6 @@ export default async function Home() {
           </div>
         </div>
       </section>
-
-      {/* Berita Terbaru Section - Enhanced with Batik Pattern */}
-      <BeritaTerbaruSection news={headlineNews} />
-
-      {/* Opini Section */}
-      <section className="pt-12 md:pt-16 pb-8 md:pb-10 bg-neutral-50">
-        <div className="container mx-auto">
-          <div className="mb-8">
-            <h2 className="font-bold text-neutral-900 mb-2" style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)' }}>
-              Opini
-            </h2>
-            <p className="text-neutral-600 text-sm md:text-base">
-              Pemikiran dan pandangan seputar pendidikan Islam dari para pakar dan praktisi
-            </p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            {latestNews.map((news) => (
-              <NewsCard key={news.id} {...news} variant="compact" />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Flayer Kegiatan Section */}
-      <FlayerSection flayers={flayerData} />
 
       {/* CTA Section */}
       <section className="py-16 md:py-20 bg-primary-600 text-white">
