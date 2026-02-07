@@ -1,15 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  /* Background & Foreground Colors */
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+@theme {
+  /* Colors */
+  --color-background: #ffffff;
+  --color-foreground: #171717;
 
   /* Primary Green Palette - LP Maarif NU */
   --color-primary-50: #f0fdf4;
@@ -43,8 +38,11 @@
   /* Font Families */
   --font-family-inter: 'Inter', system-ui, -apple-system, sans-serif;
   --font-family-poppins: 'Poppins', system-ui, -apple-system, sans-serif;
+}
 
-  /* Spacing Scale (optional custom values) */
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
   --spacing-container-padding-mobile: 1.5rem;
   --spacing-container-padding-desktop: 2rem;
 }
