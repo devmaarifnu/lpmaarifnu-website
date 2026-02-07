@@ -55,6 +55,64 @@ export default function HomeContent() {
       {/* Hero Slider */}
       <HeroSlider slides={heroSlides} />
 
+      {/* Features Section */}
+      <section className="py-12 md:py-16 bg-neutral-50">
+        <div className="container mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                icon: '📰',
+                title: 'Berita Terkini',
+                description: 'Update informasi dan kegiatan terbaru LP Ma\'arif NU',
+                href: '/berita',
+                color: 'text-blue-600',
+                bgColor: 'bg-blue-50',
+              },
+              {
+                icon: '🎓',
+                title: 'Program Pendidikan',
+                description: 'Berbagai program strategis pengembangan pendidikan',
+                href: '/tentang/program-strategis',
+                color: 'text-green-600',
+                bgColor: 'bg-green-50',
+              },
+              {
+                icon: '👥',
+                title: 'Data Satpen',
+                description: 'Informasi satuan pendidikan Ma\'arif di Indonesia',
+                href: '/data-satpen',
+                color: 'text-purple-600',
+                bgColor: 'bg-purple-50',
+              },
+              {
+                icon: '📄',
+                title: 'Dokumen',
+                description: 'Repository dokumen dan panduan pendidikan',
+                href: '/dokumen',
+                color: 'text-orange-600',
+                bgColor: 'bg-orange-50',
+              },
+            ].map((feature, idx) => (
+              <a
+                key={idx}
+                href={feature.href}
+                className="group bg-white p-6 rounded-lg shadow-sm hover:shadow-lg transition-all duration-300 border border-neutral-200"
+              >
+                <div className={`w-12 h-12 rounded-lg ${feature.bgColor} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                  <span className="text-2xl">{feature.icon}</span>
+                </div>
+                <h3 className="text-lg font-semibold text-neutral-900 mb-2 group-hover:text-primary-600 transition-colors">
+                  {feature.title}
+                </h3>
+                <p className="text-sm text-neutral-600">
+                  {feature.description}
+                </p>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Berita Terbaru Section */}
       <BeritaTerbaruSection news={headlineNews} />
 

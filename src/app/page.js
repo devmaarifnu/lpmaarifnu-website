@@ -44,31 +44,6 @@ export default function Home() {
       {/* Home Content - Client-side rendered */}
       <HomeContent />
 
-      {/* Features Section */}
-      <section className="py-12 md:py-16 bg-neutral-50">
-        <div className="container mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map((feature, idx) => (
-              <a
-                key={idx}
-                href={feature.href}
-                className="group bg-white p-6 rounded-lg shadow-sm hover:shadow-lg transition-all duration-300 border border-neutral-200"
-              >
-                <div className={`w-12 h-12 rounded-lg ${feature.bgColor} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                  <feature.icon className={`w-6 h-6 ${feature.color}`} />
-                </div>
-                <h3 className="text-lg font-semibold text-neutral-900 mb-2 group-hover:text-primary-600 transition-colors">
-                  {feature.title}
-                </h3>
-                <p className="text-sm text-neutral-600">
-                  {feature.description}
-                </p>
-              </a>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* CTA Section */}
       <section className="py-16 md:py-20 bg-primary-600 text-white">
         <div className="container mx-auto text-center">
