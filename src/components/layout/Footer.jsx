@@ -33,6 +33,7 @@ export default function Footer() {
   const socialMedia = settings?.social_media || {};
   const siteName = settings?.site_name || 'LP Ma\'arif NU PBNU';
   const siteDescription = settings?.site_description || '';
+  const logo = settings?.logo;
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -70,9 +71,19 @@ export default function Footer() {
           {/* Column 1: About */}
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-primary-600 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-xl">LP</span>
-              </div>
+              {logo ? (
+                <div className="w-12 h-12 flex items-center justify-center">
+                  <img
+                    src={logo}
+                    alt={siteName}
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+              ) : (
+                <div className="w-12 h-12 bg-primary-600 rounded-full flex items-center justify-center">
+                  <span className="text-white font-bold text-xl">LP</span>
+                </div>
+              )}
               <div className="flex flex-col">
                 <span className="font-bold text-white text-lg">
                   {siteName}

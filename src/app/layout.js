@@ -2,6 +2,7 @@ import "./globals.css";
 import Header from "@/components/layout/Header";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import FaviconUpdater from "@/components/shared/FaviconUpdater";
 import { Toaster } from 'react-hot-toast';
 
 export const metadata = {
@@ -30,6 +31,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="id">
       <body className="antialiased">
+        <FaviconUpdater />
         <Toaster
           position="top-right"
           toastOptions={{

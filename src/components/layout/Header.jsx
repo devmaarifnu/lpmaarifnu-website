@@ -44,6 +44,7 @@ export default function Header({ transparent = false, fixed = false }) {
   // Only use API data
   const contact = settings?.contact || {};
   const siteName = settings?.site_name || 'LP Ma\'arif NU PBNU';
+  const logo = settings?.logo;
 
   // Don't render if no settings loaded yet
   if (isLoading || !settings) {
@@ -77,9 +78,19 @@ export default function Header({ transparent = false, fixed = false }) {
         <div className="flex flex-col md:flex-row items-center justify-between py-4 md:py-3 gap-4">
           {/* Logo and Organization Name */}
           <a href="/" className="flex items-center gap-3 group">
-            <div className="w-12 h-12 md:w-14 md:h-14 bg-white rounded-full flex items-center justify-center shadow-lg transition-transform group-hover:scale-105">
-              <span className="text-primary-600 font-bold text-xl md:text-2xl">LP</span>
-            </div>
+            {logo ? (
+              <div className="w-12 h-12 md:w-14 md:h-14 flex items-center justify-center transition-transform group-hover:scale-105">
+                <img
+                  src={logo}
+                  alt={siteName}
+                  className="w-full h-full object-contain"
+                />
+              </div>
+            ) : (
+              <div className="w-12 h-12 md:w-14 md:h-14 bg-white rounded-full flex items-center justify-center shadow-lg transition-transform group-hover:scale-105">
+                <span className="text-primary-600 font-bold text-xl md:text-2xl">LP</span>
+              </div>
+            )}
             <div className="flex flex-col text-white">
               <span className="font-bold text-lg md:text-xl font-poppins">
                 {siteName}
