@@ -69,5 +69,5 @@ jobs:
 
             rm -rf deploy
 
-            /usr/local/lib/nodejs/node-v22.22.0-linux-x64/bin/pm2 restart ecosystem.config.js
-            /usr/local/lib/nodejs/node-v22.22.0-linux-x64/bin/pm2 save
+            sudo pm2 restart ecosystem.config.js
+            sudo pm2 save
