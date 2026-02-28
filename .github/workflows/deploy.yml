@@ -62,12 +62,12 @@ jobs:
             cp -rf deploy/standalone/* .next/standalone/
 
             echo "Replace static..."
-            cp -rf deploy/.next/static .next/
+            cp -rf deploy/.next/static .next/standalone/.next/
 
             echo "Replace public..."
-            cp -rf deploy/public/* public/
+            cp -rf deploy/public/* .next/standalone/public/
 
             rm -rf deploy
 
-            pm2 restart ecosystem.config.js
-            pm2 save
+            /usr/local/lib/nodejs/node-v22.22.0-linux-x64/bin/pm2 restart ecosystem.config.js
+            /usr/local/lib/nodejs/node-v22.22.0-linux-x64/bin/pm2 save
