@@ -64,10 +64,10 @@ jobs:
             sudo cp -rf deploy/standalone/* .next/standalone/
 
             echo "Replace static..."
-            sudo cp deploy/.next/static .next/standalone/.next/
+            sudo cp -rf deploy/.next/static .next/standalone/.next/
 
             echo "Replace public..."
-            sudo cp deploy/public/ .next/standalone/
+            sudo cp -rf deploy/public/ .next/standalone/
 
             rm -rf deploy
 
