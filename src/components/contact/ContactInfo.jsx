@@ -4,82 +4,68 @@ export default function ContactInfo({ settings }) {
   const contact = settings?.contact || {};
   const socialMedia = settings?.social_media || {};
 
-  // Mock/Fallback data - akan digantikan dengan data dari API Settings
-  const mockContactData = {
-    address: 'Jl. Kramat Raya No. 45, Jakarta Pusat 10450, DKI Jakarta',
-    phone: '(021) 3920679',
-    email: 'info@lpmaarifnu.or.id',
-    website: 'www.lpmaarifnu.or.id',
-  };
-
-  // Mock social media - akan digantikan dengan data dari API Settings
-  const mockSocialMedia = {
-    facebook: 'https://facebook.com/lpmaarifnu',
-    twitter: 'https://twitter.com/lpmaarifnu',
-    instagram: 'https://instagram.com/lpmaarifnu',
-    youtube: 'https://youtube.com/@lpmaarifnu',
-  };
-
+  // Build contact items array - hanya tampilkan item yang ada datanya
   const contactItems = [
-    {
+    contact.address && {
       icon: MapPin,
       label: 'Alamat',
-      value: contact.address || mockContactData.address,
+      value: contact.address,
       color: 'text-blue-600',
       bgColor: 'bg-blue-50',
     },
-    {
+    contact.phone && {
       icon: Phone,
       label: 'Telepon',
-      value: contact.phone || mockContactData.phone,
-      href: (contact.phone || mockContactData.phone) ? `tel:${(contact.phone || mockContactData.phone).replace(/\D/g, '')}` : null,
+      value: contact.phone,
+      href: `tel:${contact.phone.replace(/\D/g, '')}`,
       color: 'text-green-600',
       bgColor: 'bg-green-50',
     },
-    {
+    contact.email && {
       icon: Mail,
       label: 'Email',
-      value: contact.email || mockContactData.email,
-      href: (contact.email || mockContactData.email) ? `mailto:${contact.email || mockContactData.email}` : null,
+      value: contact.email,
+      href: `mailto:${contact.email}`,
       color: 'text-red-600',
       bgColor: 'bg-red-50',
     },
-    {
+    contact.website && {
       icon: Globe,
       label: 'Website',
-      value: contact.website || mockContactData.website,
-      href: contact.website || `https://${mockContactData.website}`,
+      value: contact.website,
+      href: contact.website.startsWith('http') ? contact.website : `https://${contact.website}`,
       color: 'text-purple-600',
       bgColor: 'bg-purple-50',
     },
-  ];
+  ].filter(Boolean); // Filter out undefined/null items
 
+  // Build social media items array - hanya tampilkan item yang ada datanya
   const socialMediaItems = [
-    {
+    socialMedia.facebook && {
       icon: Facebook,
       name: 'Facebook',
-      url: socialMedia.facebook || mockSocialMedia.facebook,
+      url: socialMedia.facebook,
       color: 'hover:bg-blue-600',
     },
-    {
+    socialMedia.twitter && {
       icon: Twitter,
       name: 'Twitter',
-      url: socialMedia.twitter || mockSocialMedia.twitter,
+      url: socialMedia.twitter,
       color: 'hover:bg-sky-500',
     },
-    {
+    socialMedia.instagram && {
       icon: Instagram,
       name: 'Instagram',
-      url: socialMedia.instagram || mockSocialMedia.instagram,
+      url: socialMedia.instagram,
       color: 'hover:bg-pink-600',
     },
-    {
+    socialMedia.youtube && {
       icon: Youtube,
       name: 'YouTube',
-      url: socialMedia.youtube || mockSocialMedia.youtube,
+      url: socialMedia.youtube,
       color: 'hover:bg-red-600',
     },
-  ];
+  ].filter(Boolean); // Filter out undefined/null items
 
   return (
     <div className="space-y-6">
