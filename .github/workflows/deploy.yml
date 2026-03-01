@@ -58,16 +58,14 @@ jobs:
             tar -xzf deploy.tar.gz
             rm deploy.tar.gz
 
-            sudo rm -rf .next/standalone/*
-
             echo "Replace standalone..."
-            sudo cp -rf deploy/standalone/* .next/standalone/
+            cp -rf deploy/standalone/* .next/standalone/
 
             echo "Replace static..."
-            sudo cp deploy/.next/static .next/standalone/.next/
+            cp -rf deploy/.next/static .next/standalone/.next/
 
             echo "Replace public..."
-            sudo cp deploy/public/ .next/standalone/
+            cp -rf deploy/public/* .next/standalone/public/
 
             rm -rf deploy
 
