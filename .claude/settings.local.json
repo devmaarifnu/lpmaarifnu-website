@@ -9,7 +9,8 @@
       "Bash(curl:*)",
       "Bash(node:*)",
       "Bash(tasklist)",
-      "Bash(findstr:*)"
+      "Bash(findstr:*)",
+      "Bash(cat package.json)"
     ],
     "deny": [],
     "ask": []
