@@ -8,6 +8,10 @@ export const metadata = {
   description: 'Hubungi LP Ma\'arif NU untuk informasi lebih lanjut mengenai pendidikan Islam di Indonesia.',
 };
 
+// Force dynamic rendering to always fetch fresh data from API
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function KontakPage() {
   // Fetch settings for contact information from API
   let settings = null;
