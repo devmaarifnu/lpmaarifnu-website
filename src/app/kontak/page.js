@@ -8,9 +8,11 @@ export const metadata = {
   description: 'Hubungi LP Ma\'arif NU untuk informasi lebih lanjut mengenai pendidikan Islam di Indonesia.',
 };
 
-// Force dynamic rendering to always fetch fresh data from API
+// Force dynamic rendering to always fetch fresh data from API at runtime
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
+export const fetchCache = 'force-no-store';
+export const runtime = 'nodejs';
 
 export default async function KontakPage() {
   // Fetch settings for contact information from API

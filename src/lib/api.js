@@ -317,7 +317,10 @@ export async function getCategory(slug) {
  * @returns {Promise<Object>} Settings object with site info, contact, social media
  */
 export async function getSettings() {
-  const data = await apiFetch('/settings');
+  const data = await apiFetch('/settings', {
+    cache: 'no-store',
+    next: { revalidate: 0 }
+  });
   return data;
 }
 
