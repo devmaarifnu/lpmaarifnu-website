@@ -2,6 +2,8 @@ import { Eye, Target, Lightbulb, Users } from 'lucide-react';
 import BatikPattern from '@/components/shared/BatikPattern';
 import { getPage } from '@/lib/api';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'Visi & Misi',
   description: 'Visi dan Misi LP Ma\'arif NU dalam mengembangkan pendidikan Islam berkualitas',

@@ -3,6 +3,8 @@ import BatikPattern from '@/components/shared/BatikPattern';
 import { Button } from '@/components/ui/button';
 import { getPage } from '@/lib/api';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'Program Strategis',
   description: 'Program-program strategis LP Ma\'arif NU untuk pengembangan pendidikan',
