@@ -42,28 +42,3 @@ export const menuConfig = [
     href: '/dokumen',
   },
 ];
-
-/**
- * Contact information
- */
-export const contactInfo = {
-  alamat: 'Jl. Kramat Raya No. 164, Jakarta Pusat',
-  telepon: '(021) 3905460',
-  email: 'lpmaarif@nu.or.id',
-  social: {
-    facebook: 'https://facebook.com/lpmaarifnu',
-    twitter: 'https://twitter.com/lpmaarifnu',
-    instagram: 'https://instagram.com/lpmaarifnu',
-    youtube: 'https://youtube.com/@lpmaarifnu',
-  },
-};
-
-/**
- * Organization information
- */
-export const organizationInfo = {
-  name: 'LP Ma\'arif NU PBNU',
-  fullName: 'Lembaga Pendidikan Ma\'arif Nahdlatul Ulama Pengurus Besar Nahdlatul Ulama',
-  description: 'Lembaga pendidikan di bawah naungan Pengurus Besar Nahdlatul Ulama yang berkomitmen untuk mengembangkan pendidikan Islam berkualitas di Indonesia.',
-  logo: '/images/logo-lpmaarif.png',
-};

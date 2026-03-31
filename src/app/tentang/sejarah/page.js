@@ -3,6 +3,8 @@ import { Clock } from 'lucide-react';
 import BatikPattern from '@/components/shared/BatikPattern';
 import { getPage } from '@/lib/api';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'Sejarah LP Ma\'arif NU',
   description: 'Sejarah perjalanan LP Ma\'arif NU dalam mengembangkan pendidikan Islam di Indonesia',
