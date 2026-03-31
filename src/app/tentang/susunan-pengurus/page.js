@@ -23,39 +23,70 @@ export default async function SusunanPengurusPage() {
     );
   }
 
-  // Transform department data
-  const bidang = orgData?.departments?.map((dept, index) => ({
-    nama: dept.name,
-    ketua: dept.head_name || 'Belum ditentukan',
-    deskripsi: dept.description || '',
-  })) || [];
+  // Default placeholder image using ui-avatars
+  const defaultImage = (name) =>
+    `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'Unknown')}&background=1a6b3a&color=fff&size=400`;
 
-  // Default placeholder image
-  const defaultImage = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop';
-
-  // Transform image/photo field names for API compatibility
-  const transformedStruktur = {
-    ketua: orgData?.ketua ? {
-      nama: orgData.ketua?.name || orgData.ketua?.nama || '',
-      jabatan: orgData.ketua?.position_name || 'Ketua Umum',
-      image: orgData.ketua?.photo || orgData.ketua?.image || defaultImage,
-    } : null,
-    wakil: (orgData?.wakil || []).map((w, idx) => ({
-      nama: w?.name || w?.nama || '',
-      jabatan: w?.position_name || `Wakil Ketua ${idx + 1}`,
-      image: w?.photo || w?.image || defaultImage,
-    })),
-    sekretaris: orgData?.sekretaris ? {
-      nama: orgData.sekretaris?.name || orgData.sekretaris?.nama || '',
-      jabatan: orgData.sekretaris?.position_name || 'Sekretaris Umum',
-      image: orgData.sekretaris?.photo || orgData.sekretaris?.image || defaultImage,
-    } : null,
-    bendahara: orgData?.bendahara ? {
-      nama: orgData.bendahara?.name || orgData.bendahara?.nama || '',
-      jabatan: orgData.bendahara?.position_name || 'Bendahara Umum',
-      image: orgData.bendahara?.photo || orgData.bendahara?.image || defaultImage,
-    } : null,
+  // Helper to build a single person card object
+  const transformPerson = (person, fallbackJabatan) => {
+    if (!person) return null;
+    const nama = person.name || person.nama || '';
+    return {
+      nama,
+      jabatan: person.position_name || fallbackJabatan,
+      image: person.photo || person.image || defaultImage(nama),
+    };
   };
+
+  // Helper to build an array of person card objects
+  const transformPersonArray = (arr, fallbackJabatan) =>
+    (arr || []).map((p, idx) => {
+      const nama = p?.name || p?.nama || '';
+      return {
+        nama,
+        jabatan: p?.position_name || `${fallbackJabatan} ${idx + 1}`,
+        image: p?.photo || p?.image || defaultImage(nama),
+      };
+    });
+
+  // Transform pimpinan data
+  const transformedStruktur = {
+    ketua: transformPerson(orgData?.ketua, 'Ketua Umum'),
+    wakil_ketua: transformPersonArray(orgData?.wakil_ketua, 'Wakil Ketua'),
+    sekretaris: transformPerson(orgData?.sekretaris, 'Sekretaris Umum'),
+    wakil_sekretaris: transformPersonArray(orgData?.wakil_sekretaris, 'Wakil Sekretaris'),
+    bendahara: transformPerson(orgData?.bendahara, 'Bendahara Umum'),
+    wakil_bendahara: transformPersonArray(orgData?.wakil_bendahara, 'Wakil Bendahara'),
+  };
+
+  // Transform department data — members list, no head_name
+  const bidang = (orgData?.departments || []).map((dept) => ({
+    id: dept.id,
+    nama: dept.name,
+    members: (dept.members || []).slice().sort((a, b) => (a.order_number ?? 0) - (b.order_number ?? 0)),
+  }));
+
+  // Reusable person card component (inline)
+  const PersonCard = ({ person, sizeLg = false }) => (
+    <div className={`bg-white rounded-xl shadow-lg ${sizeLg ? 'p-8' : 'p-6'} text-center`}>
+      <div
+        className={`${sizeLg ? 'w-32 h-32' : 'w-24 h-24'} mx-auto mb-4 relative rounded-full overflow-hidden border-4 border-primary-600`}
+      >
+        <Image
+          src={person.image}
+          alt={person.nama}
+          fill
+          className="object-cover"
+        />
+      </div>
+      <h3 className={`${sizeLg ? 'text-xl' : 'text-lg'} font-bold text-neutral-900 mb-1`}>
+        {person.nama}
+      </h3>
+      <p className="text-primary-600 font-semibold">
+        {person.jabatan}
+      </p>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-neutral-50">
@@ -77,99 +108,74 @@ export default async function SusunanPengurusPage() {
       <section className="py-16 md:py-20">
         <div className="container mx-auto">
           <div className="max-w-6xl mx-auto">
+
             {/* Pimpinan Utama */}
             <div className="mb-16">
               <h2 className="text-3xl font-bold text-center text-neutral-900 mb-12">
                 Pimpinan Utama
               </h2>
 
-              {/* Ketua Umum */}
+              {/* Ketua */}
               {transformedStruktur.ketua && (
-                <div className="flex justify-center mb-8">
-                  <div className="bg-white rounded-xl shadow-lg p-8 max-w-md w-full text-center">
-                    <div className="w-32 h-32 mx-auto mb-4 relative rounded-full overflow-hidden border-4 border-primary-600">
-                      <Image
-                        src={transformedStruktur.ketua.image}
-                        alt={transformedStruktur.ketua.nama}
-                        fill
-                        className="object-cover"
-                      />
+                <div className="mb-10">
+                  <h3 className="text-xl font-semibold text-center text-neutral-700 mb-6">Ketua</h3>
+                  <div className="flex justify-center">
+                    <div className="max-w-md w-full">
+                      <PersonCard person={transformedStruktur.ketua} sizeLg={true} />
                     </div>
-                    <h3 className="text-xl font-bold text-neutral-900 mb-1">
-                      {transformedStruktur.ketua.nama}
-                    </h3>
-                    <p className="text-primary-600 font-semibold">
-                      {transformedStruktur.ketua.jabatan}
-                    </p>
                   </div>
                 </div>
               )}
 
               {/* Wakil Ketua */}
-              {transformedStruktur.wakil && transformedStruktur.wakil.length > 0 && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                  {transformedStruktur.wakil.map((item, index) => (
-                    <div
-                      key={index}
-                      className="bg-white rounded-xl shadow-lg p-6 text-center"
-                    >
-                      <div className="w-24 h-24 mx-auto mb-4 relative rounded-full overflow-hidden border-4 border-primary-400">
-                        <Image
-                          src={item.image}
-                          alt={item.nama}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                      <h3 className="text-lg font-bold text-neutral-900 mb-1">
-                        {item.nama}
-                      </h3>
-                      <p className="text-primary-600 font-semibold">
-                        {item.jabatan}
-                      </p>
-                    </div>
-                  ))}
+              {transformedStruktur.wakil_ketua.length > 0 && (
+                <div className="mb-10">
+                  <h3 className="text-xl font-semibold text-center text-neutral-700 mb-6">Wakil Ketua</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {transformedStruktur.wakil_ketua.map((item, index) => (
+                      <PersonCard key={index} person={item} />
+                    ))}
+                  </div>
                 </div>
               )}
 
-              {/* Sekretaris & Bendahara */}
-              {(transformedStruktur.sekretaris || transformedStruktur.bendahara) && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Sekretariat */}
+              {(transformedStruktur.sekretaris || transformedStruktur.wakil_sekretaris.length > 0) && (
+                <div className="mb-10">
+                  <h3 className="text-xl font-semibold text-center text-neutral-700 mb-6">Sekretariat</h3>
                   {transformedStruktur.sekretaris && (
-                    <div className="bg-white rounded-xl shadow-lg p-6 text-center">
-                      <div className="w-24 h-24 mx-auto mb-4 relative rounded-full overflow-hidden border-4 border-primary-300">
-                        <Image
-                          src={transformedStruktur.sekretaris.image}
-                          alt={transformedStruktur.sekretaris.nama}
-                          fill
-                          className="object-cover"
-                        />
+                    <div className="flex justify-center mb-6">
+                      <div className="max-w-sm w-full">
+                        <PersonCard person={transformedStruktur.sekretaris} />
                       </div>
-                      <h3 className="text-lg font-bold text-neutral-900 mb-1">
-                        {transformedStruktur.sekretaris.nama}
-                      </h3>
-                      <p className="text-primary-600 font-semibold">
-                        {transformedStruktur.sekretaris.jabatan}
-                      </p>
                     </div>
                   )}
+                  {transformedStruktur.wakil_sekretaris.length > 0 && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {transformedStruktur.wakil_sekretaris.map((item, index) => (
+                        <PersonCard key={index} person={item} />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
 
+              {/* Keuangan */}
+              {(transformedStruktur.bendahara || transformedStruktur.wakil_bendahara.length > 0) && (
+                <div className="mb-10">
+                  <h3 className="text-xl font-semibold text-center text-neutral-700 mb-6">Keuangan</h3>
                   {transformedStruktur.bendahara && (
-                    <div className="bg-white rounded-xl shadow-lg p-6 text-center">
-                      <div className="w-24 h-24 mx-auto mb-4 relative rounded-full overflow-hidden border-4 border-primary-300">
-                        <Image
-                          src={transformedStruktur.bendahara.image}
-                          alt={transformedStruktur.bendahara.nama}
-                          fill
-                          className="object-cover"
-                        />
+                    <div className="flex justify-center mb-6">
+                      <div className="max-w-sm w-full">
+                        <PersonCard person={transformedStruktur.bendahara} />
                       </div>
-                      <h3 className="text-lg font-bold text-neutral-900 mb-1">
-                        {transformedStruktur.bendahara.nama}
-                      </h3>
-                      <p className="text-primary-600 font-semibold">
-                        {transformedStruktur.bendahara.jabatan}
-                      </p>
+                    </div>
+                  )}
+                  {transformedStruktur.wakil_bendahara.length > 0 && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {transformedStruktur.wakil_bendahara.map((item, index) => (
+                        <PersonCard key={index} person={item} />
+                      ))}
                     </div>
                   )}
                 </div>
@@ -177,7 +183,7 @@ export default async function SusunanPengurusPage() {
             </div>
 
             {/* Bidang-Bidang */}
-            {bidang && bidang.length > 0 && (
+            {bidang.length > 0 && (
               <div>
                 <h2 className="text-3xl font-bold text-center text-neutral-900 mb-12">
                   Bidang-Bidang
@@ -186,7 +192,7 @@ export default async function SusunanPengurusPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {bidang.map((item, index) => (
                     <div
-                      key={index}
+                      key={item.id ?? index}
                       className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow"
                     >
                       <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
@@ -194,20 +200,25 @@ export default async function SusunanPengurusPage() {
                           {index + 1}
                         </span>
                       </div>
-                      <h3 className="text-lg font-bold text-neutral-900 mb-2">
+                      <h3 className="text-lg font-bold text-neutral-900 mb-3">
                         {item.nama}
                       </h3>
-                      <p className="text-sm text-primary-600 font-semibold mb-2">
-                        Ketua: {item.ketua}
-                      </p>
-                      <p className="text-sm text-neutral-600">
-                        {item.deskripsi}
-                      </p>
+                      {item.members.length > 0 && (
+                        <ul className="space-y-1">
+                          {item.members.map((member, mIdx) => (
+                            <li key={mIdx} className="text-sm text-neutral-700 flex items-start gap-2">
+                              <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary-400 flex-shrink-0" />
+                              {member.name}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
                     </div>
                   ))}
                 </div>
               </div>
             )}
+
           </div>
         </div>
       </section>
