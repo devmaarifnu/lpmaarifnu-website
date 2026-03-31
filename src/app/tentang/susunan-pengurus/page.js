@@ -66,6 +66,8 @@ export default async function SusunanPengurusPage() {
     members: (dept.members || []).slice().sort((a, b) => (a.order_number ?? 0) - (b.order_number ?? 0)),
   }));
 
+  const anggota = (orgData?.anggota || []).map((p) => p?.name || '');
+
   // Reusable person card component (inline)
   const PersonCard = ({ person, sizeLg = false }) => (
     <div className={`bg-white rounded-xl shadow-lg ${sizeLg ? 'p-8' : 'p-6'} text-center`}>
@@ -215,6 +217,27 @@ export default async function SusunanPengurusPage() {
                       )}
                     </div>
                   ))}
+                </div>
+              </div>
+            )}
+
+            {/* Anggota */}
+            {anggota.length > 0 && (
+              <div className="mt-16">
+                <h2 className="text-3xl font-bold text-center text-neutral-900 mb-12">
+                  Anggota
+                </h2>
+                <div className="bg-white rounded-xl shadow-md p-8">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {anggota.map((nama, index) => (
+                      <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-neutral-50">
+                        <span className="w-7 h-7 rounded-full bg-primary-100 text-primary-700 font-bold text-sm flex items-center justify-center flex-shrink-0">
+                          {index + 1}
+                        </span>
+                        <span className="text-sm text-neutral-800 font-medium">{nama}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             )}
