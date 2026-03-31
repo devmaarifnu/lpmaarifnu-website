@@ -12,7 +12,6 @@ export const metadata = {
 export default async function SusunanPengurusPage() {
   // Fetch organization structure from API
   const orgData = await getOrganizationStructure();
-  console.log('Fetched organization structure:', orgData);
 
   if (!orgData) {
     return (
