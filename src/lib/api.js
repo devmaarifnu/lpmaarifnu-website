@@ -224,24 +224,6 @@ export async function getOrganizationStructure() {
   }
 }
 
-/**
- * Fetch board members with filters
- * @param {Object} params - Query parameters
- * @param {string} params.period - Filter by period (e.g., "2024-2029")
- * @param {boolean} params.active - Filter active members
- * @returns {Promise<Array>} Array of board members
- */
-export async function getBoardMembers(params = {}) {
-  try {
-    const queryString = buildQueryString(params);
-    const data = await apiFetch(`/organization/board-members${queryString}`);
-    return data || [];
-  } catch (error) {
-    console.error('Error fetching board members:', error);
-    return [];
-  }
-}
-
 // ============================================
 // PAGES APIs
 // ============================================
@@ -363,10 +345,6 @@ export async function getEventFlayers(params = {}) {
 }
 
 // ============================================
-// LEGACY COMPATIBILITY (for gradual migration)
-// ============================================
-
-// ============================================
 // SATUAN PENDIDIKAN APIs
 // ============================================
 
@@ -400,21 +378,6 @@ export async function getSatpenData(params = {}) {
       pagination: {},
       statistics: {}
     };
-  }
-}
-
-/**
- * Fetch single satuan pendidikan by ID or NPSN
- * @param {string|number} id - Satpen ID or NPSN
- * @returns {Promise<Object|null>} Satpen object or null
- */
-export async function getSatpenById(id) {
-  try {
-    const data = await apiFetch(`/satpen/${id}`);
-    return data;
-  } catch (error) {
-    console.error('Error fetching satpen:', error);
-    return null;
   }
 }
 
@@ -457,21 +420,6 @@ export async function getProvinsi(params = {}) {
   }
 }
 
-/**
- * Fetch provinsi by ID
- * @param {number} id - Provinsi ID
- * @returns {Promise<Object|null>} Provinsi object or null
- */
-export async function getProvinsiById(id) {
-  try {
-    const data = await apiFetch(`/provinsi/${id}`);
-    return data;
-  } catch (error) {
-    console.error('Error fetching provinsi:', error);
-    return null;
-  }
-}
-
 // ============================================
 // MASTER DATA - KABUPATEN APIs
 // ============================================
@@ -491,21 +439,6 @@ export async function getKabupaten(params = {}) {
   } catch (error) {
     console.error('Error fetching kabupaten:', error);
     return [];
-  }
-}
-
-/**
- * Fetch kabupaten by ID
- * @param {number} id - Kabupaten ID
- * @returns {Promise<Object|null>} Kabupaten object or null
- */
-export async function getKabupatenById(id) {
-  try {
-    const data = await apiFetch(`/kabupaten/${id}`);
-    return data;
-  } catch (error) {
-    console.error('Error fetching kabupaten:', error);
-    return null;
   }
 }
 
@@ -537,24 +470,6 @@ export async function getJenjangOptions() {
  */
 export async function getEditorialTeam() {
   const data = await apiFetch('/editorial/team');
-  return data;
-}
-
-// ============================================
-// ORGANIZATION PENGURUS APIs
-// ============================================
-
-/**
- * Fetch organization pengurus list
- * @param {Object} params - Query parameters
- * @param {string} params.periode - Filter by periode (e.g., "2024-2029")
- * @param {string} params.kategori - Filter by kategori (pimpinan_utama, bidang, sekretariat, bendahara)
- * @param {boolean} params.active - Filter active members only (default: true)
- * @returns {Promise<Object>} Object with periode and pengurus array
- */
-export async function getPengurus(params = {}) {
-  const queryString = buildQueryString(params);
-  const data = await apiFetch(`/organization/pengurus${queryString}`);
   return data;
 }
 

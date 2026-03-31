@@ -68,25 +68,22 @@ export default async function SusunanPengurusPage() {
 
   const anggota = (orgData?.anggota || []).map((p) => p?.name || '');
 
-  // Reusable person card component (inline)
-  const PersonCard = ({ person, sizeLg = false }) => (
-    <div className={`bg-white rounded-xl shadow-lg ${sizeLg ? 'p-8' : 'p-6'} text-center`}>
-      <div
-        className={`${sizeLg ? 'w-32 h-32' : 'w-24 h-24'} mx-auto mb-4 relative rounded-full overflow-hidden border-4 border-primary-600`}
-      >
-        <Image
-          src={person.image}
-          alt={person.nama}
-          fill
-          className="object-cover"
-        />
+  // Compact card for org-chart display
+  const CompactCard = ({ person }) => (
+    <div className="bg-white rounded-lg shadow-sm border border-primary-100 p-3 flex flex-col items-center text-center min-w-[130px] max-w-[160px]">
+      <div className="w-14 h-14 relative rounded-full overflow-hidden border-2 border-primary-500 mb-2 flex-shrink-0">
+        <Image src={person.image} alt={person.nama} fill className="object-cover" />
       </div>
-      <h3 className={`${sizeLg ? 'text-xl' : 'text-lg'} font-bold text-neutral-900 mb-1`}>
-        {person.nama}
-      </h3>
-      <p className="text-primary-600 font-semibold">
-        {person.jabatan}
-      </p>
+      <p className="text-xs font-bold text-neutral-900 leading-tight mb-0.5">{person.nama}</p>
+      <p className="text-[11px] text-primary-600 font-semibold leading-tight">{person.jabatan}</p>
+    </div>
+  );
+
+  // Vertical arrow connector between hierarchy levels
+  const Arrow = () => (
+    <div className="flex flex-col items-center my-2">
+      <div className="w-px h-5 bg-primary-300" />
+      <div className="w-0 h-0 border-l-[6px] border-r-[6px] border-t-[8px] border-l-transparent border-r-transparent border-t-primary-400" />
     </div>
   );
 
@@ -113,80 +110,86 @@ export default async function SusunanPengurusPage() {
 
             {/* Pimpinan Utama */}
             <div className="mb-16">
-              <h2 className="text-3xl font-bold text-center text-neutral-900 mb-12">
-                Pimpinan Utama
-              </h2>
+              <h2 className="text-3xl font-bold text-center text-neutral-900 mb-10">Pimpinan Utama</h2>
 
-              {/* Ketua */}
-              {transformedStruktur.ketua && (
-                <div className="mb-10">
-                  <h3 className="text-xl font-semibold text-center text-neutral-700 mb-6">Ketua</h3>
+              <div className="flex flex-col items-center">
+                {/* Ketua */}
+                {transformedStruktur.ketua && (
                   <div className="flex justify-center">
-                    <div className="max-w-md w-full">
-                      <PersonCard person={transformedStruktur.ketua} sizeLg={true} />
+                    <CompactCard person={transformedStruktur.ketua} />
+                  </div>
+                )}
+
+                {/* Arrow to Wakil Ketua */}
+                {transformedStruktur.wakil_ketua.length > 0 && <Arrow />}
+
+                {/* Wakil Ketua */}
+                {transformedStruktur.wakil_ketua.length > 0 && (
+                  <div className="flex flex-wrap justify-center gap-3">
+                    {transformedStruktur.wakil_ketua.map((item, index) => (
+                      <CompactCard key={index} person={item} />
+                    ))}
+                  </div>
+                )}
+
+                {/* Arrow to Sekretariat */}
+                {(transformedStruktur.sekretaris || transformedStruktur.wakil_sekretaris.length > 0) && <Arrow />}
+
+                {/* Sekretariat */}
+                {(transformedStruktur.sekretaris || transformedStruktur.wakil_sekretaris.length > 0) && (
+                  <div className="w-full max-w-2xl">
+                    <p className="text-center text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-3">Sekretariat</p>
+                    <div className="flex flex-wrap justify-center gap-3">
+                      {transformedStruktur.sekretaris && <CompactCard person={transformedStruktur.sekretaris} />}
+                      {transformedStruktur.wakil_sekretaris.map((item, index) => (
+                        <CompactCard key={index} person={item} />
+                      ))}
                     </div>
                   </div>
-                </div>
-              )}
+                )}
 
-              {/* Wakil Ketua */}
-              {transformedStruktur.wakil_ketua.length > 0 && (
-                <div className="mb-10">
-                  <h3 className="text-xl font-semibold text-center text-neutral-700 mb-6">Wakil Ketua</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {transformedStruktur.wakil_ketua.map((item, index) => (
-                      <PersonCard key={index} person={item} />
+                {/* Arrow to Keuangan */}
+                {(transformedStruktur.bendahara || transformedStruktur.wakil_bendahara.length > 0) && <Arrow />}
+
+                {/* Keuangan */}
+                {(transformedStruktur.bendahara || transformedStruktur.wakil_bendahara.length > 0) && (
+                  <div className="w-full max-w-2xl">
+                    <p className="text-center text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-3">Keuangan</p>
+                    <div className="flex flex-wrap justify-center gap-3">
+                      {transformedStruktur.bendahara && <CompactCard person={transformedStruktur.bendahara} />}
+                      {transformedStruktur.wakil_bendahara.map((item, index) => (
+                        <CompactCard key={index} person={item} />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Anggota */}
+            {anggota.length > 0 && (
+              <div className="mt-16">
+                <h2 className="text-3xl font-bold text-center text-neutral-900 mb-12">
+                  Anggota
+                </h2>
+                <div className="bg-white rounded-xl shadow-md p-8">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {anggota.map((nama, index) => (
+                      <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-neutral-50">
+                        <span className="w-7 h-7 rounded-full bg-primary-100 text-primary-700 font-bold text-sm flex items-center justify-center flex-shrink-0">
+                          {index + 1}
+                        </span>
+                        <span className="text-sm text-neutral-800 font-medium">{nama}</span>
+                      </div>
                     ))}
                   </div>
                 </div>
-              )}
-
-              {/* Sekretariat */}
-              {(transformedStruktur.sekretaris || transformedStruktur.wakil_sekretaris.length > 0) && (
-                <div className="mb-10">
-                  <h3 className="text-xl font-semibold text-center text-neutral-700 mb-6">Sekretariat</h3>
-                  {transformedStruktur.sekretaris && (
-                    <div className="flex justify-center mb-6">
-                      <div className="max-w-sm w-full">
-                        <PersonCard person={transformedStruktur.sekretaris} />
-                      </div>
-                    </div>
-                  )}
-                  {transformedStruktur.wakil_sekretaris.length > 0 && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {transformedStruktur.wakil_sekretaris.map((item, index) => (
-                        <PersonCard key={index} person={item} />
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Keuangan */}
-              {(transformedStruktur.bendahara || transformedStruktur.wakil_bendahara.length > 0) && (
-                <div className="mb-10">
-                  <h3 className="text-xl font-semibold text-center text-neutral-700 mb-6">Keuangan</h3>
-                  {transformedStruktur.bendahara && (
-                    <div className="flex justify-center mb-6">
-                      <div className="max-w-sm w-full">
-                        <PersonCard person={transformedStruktur.bendahara} />
-                      </div>
-                    </div>
-                  )}
-                  {transformedStruktur.wakil_bendahara.length > 0 && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {transformedStruktur.wakil_bendahara.map((item, index) => (
-                        <PersonCard key={index} person={item} />
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
+              </div>
+            )}
 
             {/* Bidang-Bidang */}
             {bidang.length > 0 && (
-              <div>
+              <div className="mt-16">
                 <h2 className="text-3xl font-bold text-center text-neutral-900 mb-12">
                   Bidang-Bidang
                 </h2>
@@ -217,27 +220,6 @@ export default async function SusunanPengurusPage() {
                       )}
                     </div>
                   ))}
-                </div>
-              </div>
-            )}
-
-            {/* Anggota */}
-            {anggota.length > 0 && (
-              <div className="mt-16">
-                <h2 className="text-3xl font-bold text-center text-neutral-900 mb-12">
-                  Anggota
-                </h2>
-                <div className="bg-white rounded-xl shadow-md p-8">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {anggota.map((nama, index) => (
-                      <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-neutral-50">
-                        <span className="w-7 h-7 rounded-full bg-primary-100 text-primary-700 font-bold text-sm flex items-center justify-center flex-shrink-0">
-                          {index + 1}
-                        </span>
-                        <span className="text-sm text-neutral-800 font-medium">{nama}</span>
-                      </div>
-                    ))}
-                  </div>
                 </div>
               </div>
             )}
