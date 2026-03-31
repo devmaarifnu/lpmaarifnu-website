@@ -2,6 +2,8 @@ import Image from 'next/image';
 import BatikPattern from '@/components/shared/BatikPattern';
 import { getOrganizationStructure } from '@/lib/api';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'Susunan Pengurus',
   description: 'Susunan pengurus LP Ma\'arif NU PBNU',

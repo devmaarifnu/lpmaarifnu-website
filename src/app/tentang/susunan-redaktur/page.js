@@ -3,6 +3,8 @@ import { Mail, Phone, Newspaper, Users, PenTool } from 'lucide-react';
 import BatikPattern from '@/components/shared/BatikPattern';
 import { getEditorialTeam } from '@/lib/api';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'Susunan Redaktur',
   description: 'Susunan tim redaksi website dan publikasi LP Ma\'arif NU',
