@@ -131,51 +131,49 @@ export default async function SusunanRedakturPage() {
 
       {/* Dewan Redaksi */}
       {editorial.dewan_redaksi && editorial.dewan_redaksi.length > 0 && (
-        <section className="py-16 md:py-20 bg-neutral-50">
+        <section className="py-12 bg-neutral-50">
           <div className="container mx-auto">
             <div className="max-w-6xl mx-auto">
-              <div className="text-center mb-12">
-                <div className="inline-flex items-center gap-3 mb-4">
-                  <Users className="w-8 h-8 text-primary-600" />
-                  <h2 className="text-3xl md:text-4xl font-bold text-neutral-900">
+              <div className="text-center mb-6">
+                <div className="inline-flex items-center gap-2 mb-2">
+                  <Users className="w-5 h-5 text-primary-600" />
+                  <h2 className="text-xl font-bold text-neutral-900">
                     Dewan Redaksi
                   </h2>
                 </div>
-                <p className="text-neutral-600 max-w-2xl mx-auto">
+                <p className="text-xs text-neutral-600 max-w-2xl mx-auto">
                   Para pakar dan akademisi yang memberikan arahan editorial dan menjaga kualitas konten
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                 {editorial.dewan_redaksi.map((dewan, index) => (
                   <div
                     key={dewan.id || index}
-                    className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all p-6 border border-neutral-200"
+                    className="bg-white rounded-lg shadow-sm border border-primary-100 p-3 flex items-start gap-3"
                   >
-                    <div className="flex items-start gap-4">
-                      <div className="relative w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden">
-                        <Image
-                          src={dewan.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(dewan.name)}&background=0891B2&color=fff&size=400`}
-                          alt={dewan.name}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="text-lg font-bold text-neutral-900 mb-1">
-                          {dewan.name}
-                        </h4>
-                        {dewan.institution && (
-                          <p className="text-primary-600 text-sm font-semibold mb-1">
-                            {dewan.institution}
-                          </p>
-                        )}
-                        {dewan.expertise && (
-                          <p className="text-neutral-600 text-sm">
-                            <span className="font-medium">Keahlian:</span> {dewan.expertise}
-                          </p>
-                        )}
-                      </div>
+                    <div className="relative w-14 h-14 flex-shrink-0 rounded-full overflow-hidden border-2 border-primary-300">
+                      <Image
+                        src={dewan.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(dewan.name)}&background=0891B2&color=fff&size=400`}
+                        alt={dewan.name}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-xs font-bold text-neutral-900 leading-tight mb-0.5">
+                        {dewan.name}
+                      </h4>
+                      {dewan.institution && (
+                        <p className="text-primary-600 text-[11px] font-semibold leading-tight mb-0.5">
+                          {dewan.institution}
+                        </p>
+                      )}
+                      {dewan.expertise && (
+                        <p className="text-neutral-600 text-[11px] leading-tight">
+                          <span className="font-medium">Keahlian:</span> {dewan.expertise}
+                        </p>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -187,28 +185,28 @@ export default async function SusunanRedakturPage() {
 
       {/* Tim Redaksi */}
       {editorial.tim_redaksi && editorial.tim_redaksi.length > 0 && (
-        <section className="py-16 md:py-20 bg-white">
+        <section className="py-12 bg-white">
           <div className="container mx-auto">
             <div className="max-w-6xl mx-auto">
-              <div className="text-center mb-12">
-                <div className="inline-flex items-center gap-3 mb-4">
-                  <PenTool className="w-8 h-8 text-primary-600" />
-                  <h2 className="text-3xl md:text-4xl font-bold text-neutral-900">
+              <div className="text-center mb-6">
+                <div className="inline-flex items-center gap-2 mb-2">
+                  <PenTool className="w-5 h-5 text-primary-600" />
+                  <h2 className="text-xl font-bold text-neutral-900">
                     Tim Redaksi
                   </h2>
                 </div>
-                <p className="text-neutral-600 max-w-2xl mx-auto">
+                <p className="text-xs text-neutral-600 max-w-2xl mx-auto">
                   Tim profesional yang bekerja setiap hari untuk menghadirkan konten berkualitas
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
                 {editorial.tim_redaksi.map((tim, index) => (
                   <div
                     key={tim.id || index}
-                    className="bg-neutral-50 rounded-xl shadow-sm hover:shadow-md transition-all p-6 text-center border border-neutral-200"
+                    className="bg-white rounded-lg shadow-sm border border-primary-100 p-3 flex flex-col items-center text-center"
                   >
-                    <div className="relative w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border-2 border-primary-300">
+                    <div className="relative w-14 h-14 mx-auto mb-2 rounded-full overflow-hidden border-2 border-primary-300">
                       <Image
                         src={tim.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(tim.name)}&background=6366F1&color=fff&size=400`}
                         alt={tim.name}
@@ -216,10 +214,10 @@ export default async function SusunanRedakturPage() {
                         className="object-cover"
                       />
                     </div>
-                    <h4 className="text-lg font-bold text-neutral-900 mb-1">
+                    <h4 className="text-xs font-bold text-neutral-900 leading-tight mb-0.5">
                       {tim.name}
                     </h4>
-                    <p className="text-primary-600 text-sm font-semibold">
+                    <p className="text-primary-600 text-[11px] font-semibold leading-tight">
                       {tim.position}
                     </p>
                   </div>

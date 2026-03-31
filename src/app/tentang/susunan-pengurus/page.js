@@ -169,17 +169,17 @@ export default async function SusunanPengurusPage() {
             {/* Anggota */}
             {anggota.length > 0 && (
               <div className="mt-16">
-                <h2 className="text-3xl font-bold text-center text-neutral-900 mb-12">
+                <h2 className="text-xl font-bold text-center text-neutral-900 mb-6">
                   Anggota
                 </h2>
-                <div className="bg-white rounded-xl shadow-md p-8">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <div className="bg-white rounded-xl shadow-sm border border-primary-100 p-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                     {anggota.map((nama, index) => (
-                      <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-neutral-50">
-                        <span className="w-7 h-7 rounded-full bg-primary-100 text-primary-700 font-bold text-sm flex items-center justify-center flex-shrink-0">
+                      <div key={index} className="flex items-center gap-2 p-2 rounded-lg bg-neutral-50">
+                        <span className="w-5 h-5 rounded-full bg-primary-100 text-primary-700 font-bold text-[11px] flex items-center justify-center flex-shrink-0">
                           {index + 1}
                         </span>
-                        <span className="text-sm text-neutral-800 font-medium">{nama}</span>
+                        <span className="text-xs text-neutral-800 font-medium leading-tight">{nama}</span>
                       </div>
                     ))}
                   </div>
@@ -190,29 +190,29 @@ export default async function SusunanPengurusPage() {
             {/* Bidang-Bidang */}
             {bidang.length > 0 && (
               <div className="mt-16">
-                <h2 className="text-3xl font-bold text-center text-neutral-900 mb-12">
+                <h2 className="text-xl font-bold text-center text-neutral-900 mb-6">
                   Bidang-Bidang
                 </h2>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {bidang.map((item, index) => (
                     <div
                       key={item.id ?? index}
-                      className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow"
+                      className="bg-white rounded-lg shadow-sm border border-primary-100 p-4 hover:shadow-md transition-shadow"
                     >
-                      <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
-                        <span className="text-xl font-bold text-primary-600">
+                      <div className="w-8 h-8 bg-primary-100 rounded-md flex items-center justify-center mb-3">
+                        <span className="text-sm font-bold text-primary-600">
                           {index + 1}
                         </span>
                       </div>
-                      <h3 className="text-lg font-bold text-neutral-900 mb-3">
+                      <h3 className="text-xs font-bold text-neutral-900 mb-2">
                         {item.nama}
                       </h3>
                       {item.members.length > 0 && (
-                        <ul className="space-y-1">
+                        <ul className="space-y-0.5">
                           {item.members.map((member, mIdx) => (
-                            <li key={mIdx} className="text-sm text-neutral-700 flex items-start gap-2">
-                              <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary-400 flex-shrink-0" />
+                            <li key={mIdx} className="text-[11px] text-neutral-700 flex items-start gap-1.5">
+                              <span className="mt-1 w-1 h-1 rounded-full bg-primary-400 flex-shrink-0" />
                               {member.name}
                             </li>
                           ))}
