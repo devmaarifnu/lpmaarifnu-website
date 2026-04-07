@@ -109,10 +109,11 @@ export default async function SusunanPengurusPage() {
         <div className="container mx-auto">
           <div className="max-w-6xl mx-auto">
 
-            {/* Pimpinan Utama */}
+            {/* Ketua */}
             <div className="mb-16">
-              <h2 className="text-3xl font-bold text-center text-neutral-900 mb-10">Pimpinan Utama</h2>
-
+              <h2 className="text-3xl font-bold text-center text-neutral-900 mb-2">Susunan Pengurus</h2>
+              <p className="text-center text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-8">Masa Khidmat 2022 - 2027</p>
+              
               <div className="flex flex-col items-center">
                 {/* Ketua */}
                 {transformedStruktur.ketua && (
@@ -133,13 +134,13 @@ export default async function SusunanPengurusPage() {
                   </div>
                 )}
 
-                {/* Arrow to Sekretariat */}
+                {/* Arrow to Sekretaris */}
                 {(transformedStruktur.sekretaris || transformedStruktur.wakil_sekretaris.length > 0) && <Arrow />}
 
-                {/* Sekretariat */}
+                {/* Sekretaris */}
                 {(transformedStruktur.sekretaris || transformedStruktur.wakil_sekretaris.length > 0) && (
                   <div className="w-full max-w-2xl">
-                    <p className="text-center text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-3">Sekretariat</p>
+                    <p className="text-center text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-3">Sekretaris</p>
                     <div className="flex flex-wrap justify-center gap-3">
                       {transformedStruktur.sekretaris && <CompactCard person={transformedStruktur.sekretaris} />}
                       {transformedStruktur.wakil_sekretaris.map((item, index) => (
@@ -149,13 +150,13 @@ export default async function SusunanPengurusPage() {
                   </div>
                 )}
 
-                {/* Arrow to Keuangan */}
+                {/* Arrow to Bendahara */}
                 {(transformedStruktur.bendahara || transformedStruktur.wakil_bendahara.length > 0) && <Arrow />}
 
-                {/* Keuangan */}
+                {/* Bendahara */}
                 {(transformedStruktur.bendahara || transformedStruktur.wakil_bendahara.length > 0) && (
                   <div className="w-full max-w-2xl">
-                    <p className="text-center text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-3">Keuangan</p>
+                    <p className="text-center text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-3">Bendahara</p>
                     <div className="flex flex-wrap justify-center gap-3">
                       {transformedStruktur.bendahara && <CompactCard person={transformedStruktur.bendahara} />}
                       {transformedStruktur.wakil_bendahara.map((item, index) => (
@@ -192,7 +193,7 @@ export default async function SusunanPengurusPage() {
             {bidang.length > 0 && (
               <div className="mt-16">
                 <h2 className="text-xl font-bold text-center text-neutral-900 mb-6">
-                  Bidang-Bidang
+                  Susunan Anggota Divisi
                 </h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
