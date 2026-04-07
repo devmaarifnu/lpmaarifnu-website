@@ -143,7 +143,7 @@ export default function ContactForm() {
           name="name"
           value={formData.name}
           onChange={handleChange}
-          className={`w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors ${
+          className={`w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors bg-white text-neutral-900 placeholder:text-neutral-400 ${
             errors.name ? 'border-red-500' : 'border-neutral-300'
           }`}
           placeholder="Masukkan nama lengkap Anda"
@@ -167,7 +167,7 @@ export default function ContactForm() {
             name="email"
             value={formData.email}
             onChange={handleChange}
-            className={`w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors ${
+            className={`w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors bg-white text-neutral-900 placeholder:text-neutral-400 ${
               errors.email ? 'border-red-500' : 'border-neutral-300'
             }`}
             placeholder="nama@email.com"
@@ -189,7 +189,7 @@ export default function ContactForm() {
             name="phone"
             value={formData.phone}
             onChange={handleChange}
-            className={`w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors ${
+            className={`w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors bg-white text-neutral-900 placeholder:text-neutral-400 ${
               errors.phone ? 'border-red-500' : 'border-neutral-300'
             }`}
             placeholder="08123456789"
@@ -212,7 +212,7 @@ export default function ContactForm() {
           name="subject"
           value={formData.subject}
           onChange={handleChange}
-          className={`w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors ${
+          className={`w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors bg-white text-neutral-900 placeholder:text-neutral-400 ${
             errors.subject ? 'border-red-500' : 'border-neutral-300'
           }`}
           placeholder="Topik pesan Anda"
@@ -234,7 +234,7 @@ export default function ContactForm() {
           value={formData.message}
           onChange={handleChange}
           rows={6}
-          className={`w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors resize-none ${
+          className={`w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors resize-none bg-white text-neutral-900 placeholder:text-neutral-400 ${
             errors.message ? 'border-red-500' : 'border-neutral-300'
           }`}
           placeholder="Tulis pesan Anda di sini..."

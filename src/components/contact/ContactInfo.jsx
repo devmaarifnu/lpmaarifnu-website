@@ -136,20 +136,6 @@ export default function ContactInfo({ settings }) {
         <p className="text-primary-50 text-sm mb-4">
           Tim kami siap membantu Anda dengan pertanyaan atau kebutuhan informasi terkait pendidikan Islam dan layanan LP Ma&apos;arif NU.
         </p>
-        <div className="space-y-2 text-sm">
-          <div className="flex items-center gap-2">
-            <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
-            <span>Respon cepat dalam 1x24 jam</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
-            <span>Layanan profesional</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
-            <span>Konsultasi gratis</span>
-          </div>
-        </div>
       </div>
     </div>
   );

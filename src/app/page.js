@@ -48,23 +48,23 @@ export default function Home() {
       <section className="py-16 md:py-20 bg-primary-600 text-white">
         <div className="container mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Bergabung dengan Keluarga Besar LP Ma&apos;arif NU
+            Daftarkan Satuan Pendidikan Anda
           </h2>
           <p className="text-lg text-primary-100 mb-8 max-w-2xl mx-auto">
-            Mari bersama-sama membangun pendidikan Islam yang berkualitas untuk generasi masa depan Indonesia
+            Bergabunglah dengan ribuan satuan pendidikan Ma&apos;arif NU di seluruh Indonesia. Daftarkan lembaga Anda melalui SIPINTER untuk mendapatkan akses layanan dan data resmi LP Ma&apos;arif NU.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <a href="/tentang/visi-misi">
+            <a href="https://sipinter.maarifnu.or.id/ceknpsn" target="_blank" rel="noopener noreferrer">
               <Button size="lg" variant="secondary">
-                Tentang Kami
+                Daftar Sekarang
               </Button>
             </a>
-            <a href="/kontak">
+            <a href="https://sipinter.maarifnu.or.id/informasi/panduan-pendataan-satuan-pendidikan" target="_blank" rel="noopener noreferrer">
               <Button
                 size="lg"
                 className="bg-white text-primary-600 hover:bg-neutral-100"
               >
-                Hubungi Kami
+                Mekanisme Pendaftaran
               </Button>
             </a>
           </div>
