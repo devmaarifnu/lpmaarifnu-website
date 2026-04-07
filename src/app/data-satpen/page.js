@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getSatpenData, getProvinsi, getKabupaten, getJenjangOptions } from '@/lib/api';
+import { getSatpenData, getSatpenStatistics, getProvinsi, getKabupaten, getJenjangOptions } from '@/lib/api';
 import { Search, Download, Building2, MapPin, User, Award, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import BatikPattern from '@/components/shared/BatikPattern';
@@ -20,6 +20,16 @@ export default function DataSatpenPage() {
   const [pagination, setPagination] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
+  const [statistics, setStatistics] = useState(null);
+
+  // Fetch statistics
+  useEffect(() => {
+    const fetchStatistics = async () => {
+      const data = await getSatpenStatistics();
+      if (data) setStatistics(data);
+    };
+    fetchStatistics();
+  }, []);
 
   // Fetch jenjang options
   useEffect(() => {
@@ -60,7 +70,7 @@ export default function DataSatpenPage() {
 
       const params = {
         page: currentPage,
-        limit: 20,
+        limit: 21,
       };
 
       if (selectedJenjang !== 'Semua') {
@@ -137,15 +147,21 @@ export default function DataSatpenPage() {
           </p>
           <div className="flex items-center gap-8 text-teal-100">
             <div>
-              <div className="text-3xl font-bold text-white">14,000+</div>
+              <div className="text-3xl font-bold text-white">
+                {statistics ? statistics.total_satpen.toLocaleString('id-ID') + '+' : '...'}
+              </div>
               <div className="text-sm">Satuan Pendidikan</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-white">34</div>
-              <div className="text-sm">Provinsi</div>
+              <div className="text-3xl font-bold text-white">
+                {statistics ? statistics.total_guru.toLocaleString('id-ID') + '+' : '...'}
+              </div>
+              <div className="text-sm">Guru</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-white">2.5M+</div>
+              <div className="text-3xl font-bold text-white">
+                {statistics ? statistics.total_siswa.toLocaleString('id-ID') + '+' : '...'}
+              </div>
               <div className="text-sm">Siswa</div>
             </div>
           </div>

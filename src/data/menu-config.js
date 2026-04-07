@@ -16,6 +16,7 @@ export const menuConfig = [
       { label: 'Susunan Pengurus', href: '/tentang/susunan-pengurus' },
       { label: 'Susunan Redaktur', href: '/tentang/susunan-redaktur' },
       { label: 'Program Strategis', href: '/tentang/program-strategis' },
+      { label: 'Kontak', href: '/kontak' },
     ],
   },
   {
