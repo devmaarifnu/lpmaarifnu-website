@@ -25,8 +25,10 @@ export default function NewsCard({
   category,
   author,
   slug,
+  href,
   variant = 'default',
 }) {
+  const articleHref = href || `/berita/${slug}`;
   const formattedDate = formatDate(date, {
     year: 'numeric',
     month: 'long',
@@ -36,7 +38,7 @@ export default function NewsCard({
   if (variant === 'horizontal') {
     return (
       <a
-        href={`/berita/${slug}`}
+        href={articleHref}
         className="group flex flex-col bg-white rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 border border-neutral-200 h-full"
       >
         <div className="relative w-full aspect-[16/9] flex-shrink-0 overflow-hidden bg-neutral-100">
@@ -79,7 +81,7 @@ export default function NewsCard({
   if (variant === 'compact') {
     return (
       <a
-        href={`/berita/${slug}`}
+        href={articleHref}
         className="group flex flex-col bg-white rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 border border-neutral-200 h-full"
       >
         <div className="relative w-full aspect-square overflow-hidden bg-neutral-100">
@@ -114,7 +116,7 @@ export default function NewsCard({
   if (variant === 'minimal') {
     return (
       <a
-        href={`/berita/${slug}`}
+        href={articleHref}
         className="group flex gap-3 hover:bg-neutral-50 p-2 rounded-lg transition-colors duration-200"
       >
         <div className="relative w-20 h-20 flex-shrink-0 rounded overflow-hidden">
@@ -141,7 +143,7 @@ export default function NewsCard({
   // Default variant
   return (
     <a
-      href={`/berita/${slug}`}
+      href={articleHref}
       className="group block bg-white rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-neutral-200 h-full"
     >
       {/* Image */}

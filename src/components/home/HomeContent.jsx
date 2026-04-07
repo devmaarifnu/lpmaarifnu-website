@@ -130,7 +130,7 @@ export default function HomeContent() {
           {latestNews.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
               {latestNews.map((news) => (
-                <NewsCard key={news.id} {...news} variant="compact" />
+                <NewsCard key={news.id} {...news} href={`/opini/${news.slug}`} variant="compact" />
               ))}
             </div>
           ) : (
