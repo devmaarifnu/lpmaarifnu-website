@@ -124,7 +124,7 @@ export default function DokumenContent() {
                                   className="flex items-center gap-2 flex-shrink-0"
                                 >
                                   <Download className="w-4 h-4" />
-                                  Download
+                                  <span className="hidden sm:inline">Download</span>
                                 </Button>
                               </a>
                             </div>

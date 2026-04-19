@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getSatpenData, getSatpenStatistics, getProvinsi, getKabupaten, getJenjangOptions } from '@/lib/api';
+import { getSatpenData, getSatpenStatistics, getProvinsi, getKabupaten, getJenjangOptions, exportSatpenData } from '@/lib/api';
 import { Search, Download, Building2, MapPin, User, Award, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import BatikPattern from '@/components/shared/BatikPattern';
@@ -21,6 +21,7 @@ export default function DataSatpenPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [statistics, setStatistics] = useState(null);
+  const [isExporting, setIsExporting] = useState(false);
 
   // Fetch statistics
   useEffect(() => {
@@ -127,6 +128,23 @@ export default function DataSatpenPage() {
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleExport = async () => {
+    setIsExporting(true);
+    try {
+      const params = {};
+      if (selectedJenjang !== 'Semua') params.jenjang = selectedJenjang;
+      if (selectedProvinsi !== 'Semua') params.provinsi = selectedProvinsi;
+      if (selectedKabupaten !== 'Semua') params.kabupaten = selectedKabupaten;
+      if (searchTerm) params.search = searchTerm;
+      await exportSatpenData(params);
+    } catch (error) {
+      console.error('Export error:', error);
+      alert('Gagal mengunduh data. Silakan coba lagi.');
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   return (
@@ -237,9 +255,23 @@ export default function DataSatpenPage() {
             )}
 
             {/* Export Button */}
-            <Button variant="outline" className="flex items-center gap-2">
-              <Download className="w-4 h-4" />
-              Export
+            <Button
+              variant="outline"
+              onClick={handleExport}
+              disabled={isExporting}
+              className="flex items-center gap-2 hover:bg-teal-50 hover:text-teal-700 hover:border-teal-300"
+            >
+              {isExporting ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                  Mengunduh...
+                </>
+              ) : (
+                <>
+                  <Download className="w-4 h-4" />
+                  Export
+                </>
+              )}
             </Button>
           </div>
 
