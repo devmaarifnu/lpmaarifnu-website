@@ -102,7 +102,7 @@ export default function Header({ transparent = false, fixed = false }) {
           </a>
 
           {/* Contact Information */}
-          <div className="flex flex-col sm:flex-row items-center gap-3 md:gap-6 text-white text-sm">
+          <div className="hidden md:flex flex-col sm:flex-row items-center gap-3 md:gap-6 text-white text-sm">
             {contact.address && (
               <div className="flex items-center gap-2 group">
                 <MapPin className="w-4 h-4 text-primary-100 group-hover:text-white transition-colors" />
