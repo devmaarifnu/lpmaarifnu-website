@@ -460,6 +460,45 @@ export async function getJenjangOptions() {
   }
 }
 
+/**
+ * Export satuan pendidikan data as file download
+ * @param {Object} params - Filter parameters (same as getSatpenData)
+ * @param {string} params.jenjang - Filter by jenjang
+ * @param {string} params.provinsi - Filter by provinsi name
+ * @param {string} params.kabupaten - Filter by kabupaten name
+ * @param {string} params.search - Search keyword
+ * @returns {Promise<void>} Triggers file download
+ */
+export async function exportSatpenData(params = {}) {
+  const queryString = buildQueryString(params);
+  const baseURL = getBaseURL('/satpen/export');
+  const url = `${baseURL}/satpen/export${queryString}`;
+
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(`Export gagal: ${response.status} ${response.statusText}`);
+  }
+
+  const blob = await response.blob();
+  const contentDisposition = response.headers.get('Content-Disposition');
+  let filename = 'data-satpen.xlsx';
+
+  if (contentDisposition) {
+    const match = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+    if (match) filename = match[1].replace(/['"]/g, '');
+  }
+
+  const objectURL = URL.createObjectURL(blob);
+  const anchor = document.createElement('a');
+  anchor.href = objectURL;
+  anchor.download = filename;
+  document.body.appendChild(anchor);
+  anchor.click();
+  document.body.removeChild(anchor);
+  URL.revokeObjectURL(objectURL);
+}
+
 // ============================================
 // EDITORIAL TEAM APIs
 // ============================================
