@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { getSatpenData, getSatpenStatistics, getProvinsi, getKabupaten, getJenjangOptions, exportSatpenData } from '@/lib/api';
-import { Search, Download, Building2, MapPin, User, Award, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, Download, Building2, MapPin, User, Award, ChevronLeft, ChevronRight, ChevronRight as ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import BatikPattern from '@/components/shared/BatikPattern';
+import Link from 'next/link';
 
 export default function DataSatpenPage() {
   const [satpenData, setSatpenData] = useState([]);
@@ -296,9 +297,10 @@ export default function DataSatpenPage() {
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {satpenData.map((item) => (
-                  <div
+                  <Link
                     key={item.id}
-                    className="bg-white rounded-lg shadow-sm hover:shadow-lg transition-shadow p-6 border border-neutral-200"
+                    href={`/data-satpen/${item.id}`}
+                    className="group bg-white rounded-lg shadow-sm hover:shadow-lg transition-all p-6 border border-neutral-200 hover:border-teal-300 flex flex-col"
                   >
                     {/* Jenjang Badge */}
                     <div className="flex items-center justify-between mb-4">
@@ -316,12 +318,12 @@ export default function DataSatpenPage() {
                     </div>
 
                     {/* Nama Satpen */}
-                    <h3 className="text-lg font-bold text-neutral-900 mb-3">
+                    <h3 className="text-lg font-bold text-neutral-900 mb-3 group-hover:text-teal-700 transition-colors">
                       {item.nama}
                     </h3>
 
                     {/* Info */}
-                    <div className="space-y-2 text-sm text-neutral-600">
+                    <div className="space-y-2 text-sm text-neutral-600 flex-1">
                       <div className="flex items-start gap-2">
                         <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0 text-primary-600" />
                         <span>
@@ -336,16 +338,22 @@ export default function DataSatpenPage() {
                           <span>{item.kepala_sekolah}</span>
                         </div>
                       )}
-                      <div className="flex items-center justify-between pt-2 border-t border-neutral-100">
-                        <span className="text-xs text-neutral-500">NPSN: {item.npsn}</span>
-                        {item.jumlah_siswa && (
-                          <span className="text-xs font-semibold text-neutral-900">
+                    </div>
+
+                    <div className="flex items-center justify-between pt-3 mt-3 border-t border-neutral-100">
+                      <span className="text-xs text-neutral-500">NPSN: {item.npsn}</span>
+                      <div className="flex items-center gap-3">
+                        {item.jumlah_siswa > 0 && (
+                          <span className="text-xs font-semibold text-neutral-700">
                             {item.jumlah_siswa.toLocaleString('id-ID')} siswa
                           </span>
                         )}
+                        <span className="text-xs text-teal-600 font-medium group-hover:underline flex items-center gap-0.5">
+                          Detail <ArrowRight className="w-3 h-3" />
+                        </span>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
 
