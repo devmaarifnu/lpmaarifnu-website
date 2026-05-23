@@ -461,6 +461,21 @@ export async function getJenjangOptions() {
 }
 
 /**
+ * Fetch single satuan pendidikan by ID
+ * @param {number|string} id - Satpen ID
+ * @returns {Promise<Object|null>} Satpen object or null
+ */
+export async function getSatpenById(id) {
+  try {
+    const data = await apiFetch(`/satpen/${id}`);
+    return data;
+  } catch (error) {
+    console.error('Error fetching satpen detail:', error);
+    return null;
+  }
+}
+
+/**
  * Export satuan pendidikan data as file download
  * @param {Object} params - Filter parameters (same as getSatpenData)
  * @param {string} params.jenjang - Filter by jenjang

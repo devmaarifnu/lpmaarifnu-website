@@ -4,7 +4,7 @@ import { MapPin } from 'lucide-react';
 import BatikPattern from '@/components/shared/BatikPattern';
 
 export const metadata = {
-  title: 'Berita Daerah - LP Ma\'arif NU',
+  title: 'Berita Daerah',
   description: 'Berita dan informasi terkini dari berbagai daerah LP Ma\'arif NU',
 };
 

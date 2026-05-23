@@ -4,7 +4,7 @@ import { MessageSquare } from 'lucide-react';
 import BatikPattern from '@/components/shared/BatikPattern';
 
 export const metadata = {
-  title: 'Opini - LP Ma\'arif NU',
+  title: 'Opini',
   description: 'Artikel opini dan pemikiran seputar pendidikan Islam dari para pakar',
 };
 

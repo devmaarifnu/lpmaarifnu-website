@@ -32,12 +32,12 @@ export async function generateMetadata({ params }) {
 
     if (!article) {
       return {
-        title: 'Opini Tidak Ditemukan - LP Ma\'arif NU',
+        title: 'Opini Tidak Ditemukan',
       };
     }
 
     return {
-      title: `${article.title} - Opini LP Ma'arif NU`,
+      title: article.title,
       description: article.excerpt || article.meta_description,
       keywords: article.meta_keywords,
       openGraph: {
@@ -51,7 +51,7 @@ export async function generateMetadata({ params }) {
     };
   } catch (error) {
     return {
-      title: 'Opini - LP Ma\'arif NU',
+      title: 'Opini',
     };
   }
 }
