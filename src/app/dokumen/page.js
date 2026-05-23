@@ -3,6 +3,11 @@ import DokumenContent from '@/components/dokumen/DokumenContent';
 import { FileText } from 'lucide-react';
 import BatikPattern from '@/components/shared/BatikPattern';
 
+export const metadata = {
+  title: 'Dokumen',
+  description: 'Repository dokumen dan panduan pendidikan LP Ma\'arif NU',
+};
+
 export default function DokumenPage() {
 
   return (

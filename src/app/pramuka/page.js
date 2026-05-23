@@ -5,6 +5,11 @@ import BatikPattern from '@/components/shared/BatikPattern';
 import { getPage } from '@/lib/api';
 import { notFound } from 'next/navigation';
 
+export const metadata = {
+  title: 'Pramuka',
+  description: 'Gerakan Pramuka LP Ma\'arif NU - Pengembangan karakter dan kepemimpinan',
+};
+
 // Icon mapping for programs
 const iconMap = {
   'target': Target,

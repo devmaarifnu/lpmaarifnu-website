@@ -4,7 +4,7 @@ import { getSettings } from '@/lib/api';
 import { MapPin, Phone, Mail, Clock } from 'lucide-react';
 
 export const metadata = {
-  title: 'Kontak Kami - LP Ma\'arif NU',
+  title: 'Kontak',
   description: 'Hubungi LP Ma\'arif NU untuk informasi lebih lanjut mengenai pendidikan Islam di Indonesia.',
 };
 

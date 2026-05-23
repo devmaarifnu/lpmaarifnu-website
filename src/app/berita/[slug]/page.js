@@ -32,12 +32,12 @@ export async function generateMetadata({ params }) {
 
     if (!article) {
       return {
-        title: 'Berita Tidak Ditemukan - LP Ma\'arif NU',
+        title: 'Berita Tidak Ditemukan',
       };
     }
 
     return {
-      title: `${article.title} - LP Ma'arif NU`,
+      title: article.title,
       description: article.excerpt || article.meta?.description,
       keywords: article.meta?.keywords,
       openGraph: {
@@ -51,7 +51,7 @@ export async function generateMetadata({ params }) {
     };
   } catch (error) {
     return {
-      title: 'Berita - LP Ma\'arif NU',
+      title: 'Berita',
     };
   }
 }

@@ -4,7 +4,7 @@ import { Newspaper } from 'lucide-react';
 import BatikPattern from '@/components/shared/BatikPattern';
 
 export const metadata = {
-  title: 'Berita - LP Ma\'arif NU',
+  title: 'Berita',
   description: 'Berita dan informasi terkini dari LP Ma\'arif NU',
 };
 
