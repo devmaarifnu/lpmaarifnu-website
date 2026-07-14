@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { Mail, Phone, Newspaper, Users, PenTool } from 'lucide-react';
 import BatikPattern from '@/components/shared/BatikPattern';
-import { getEditorialTeam } from '@/lib/api';
+import { getEditorialTeam, getSettings } from '@/lib/api';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,13 +11,17 @@ export const metadata = {
 };
 
 export default async function SusunanRedakturPage() {
-  // Fetch editorial team from API
+  // Fetch editorial team and settings from API
   let editorial = null;
+  let settings = null;
 
   try {
-    editorial = await getEditorialTeam();
+    [editorial, settings] = await Promise.all([
+      getEditorialTeam(),
+      getSettings(),
+    ]);
   } catch (error) {
-    console.error('Error fetching editorial team:', error);
+    console.error('Error fetching data:', error);
   }
 
   if (!editorial) {
@@ -30,6 +34,9 @@ export default async function SusunanRedakturPage() {
       </div>
     );
   }
+
+  // Get contact info from settings API (dynamic), fallback to editorial.contact
+  const contact = settings?.contact || editorial?.contact || {};
 
   const CompactCard = ({ person, position, photo, name }) => {
     const displayName = name || person?.name || '';
@@ -230,39 +237,37 @@ export default async function SusunanRedakturPage() {
         </section>
       )}
 
-      {/* Contact Section */}
-      {editorial.contact && (
-        <section className="py-16 bg-primary-600 text-white">
-          <div className="container mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Hubungi Redaksi
-            </h2>
-            <p className="text-lg text-primary-100 mb-8 max-w-2xl mx-auto">
-              Untuk informasi, kritik, atau saran terkait konten website LP Ma&apos;arif NU
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              {editorial.contact.email && (
-                <a
-                  href={`mailto:${editorial.contact.email}`}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-white text-primary-600 rounded-lg hover:bg-primary-50 transition-colors font-semibold"
-                >
-                  <Mail className="w-5 h-5" />
-                  {editorial.contact.email}
-                </a>
-              )}
-              {editorial.contact.phone && (
-                <a
-                  href={`tel:${editorial.contact.phone}`}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-primary-700 text-white rounded-lg hover:bg-primary-800 transition-colors font-semibold border-2 border-white"
-                >
-                  <Phone className="w-5 h-5" />
-                  {editorial.contact.phone}
-                </a>
-              )}
-            </div>
+      {/* Contact Section - dynamic from settings API */}
+      <section className="py-16 bg-primary-600 text-white">
+        <div className="container mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            Hubungi Redaksi
+          </h2>
+          <p className="text-lg text-primary-100 mb-8 max-w-2xl mx-auto">
+            Untuk informasi, kritik, atau saran terkait konten website LP Ma&apos;arif NU
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            {contact.email && (
+              <a
+                href={`mailto:${contact.email}`}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-white text-primary-600 rounded-lg hover:bg-primary-50 transition-colors font-semibold"
+              >
+                <Mail className="w-5 h-5" />
+                {contact.email}
+              </a>
+            )}
+            {contact.phone && (
+              <a
+                href={`tel:${contact.phone}`}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-primary-700 text-white rounded-lg hover:bg-primary-800 transition-colors font-semibold border-2 border-white"
+              >
+                <Phone className="w-5 h-5" />
+                {contact.phone}
+              </a>
+            )}
           </div>
-        </section>
-      )}
+        </div>
+      </section>
     </div>
   );
 }

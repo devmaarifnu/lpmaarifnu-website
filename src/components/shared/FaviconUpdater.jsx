@@ -14,12 +14,12 @@ export default function FaviconUpdater() {
         const settings = await getSettings();
         const faviconUrl = settings?.favicon;
 
-        if (faviconUrl) {
+        if (faviconUrl && faviconUrl !== '/icon.png') {
           // Remove existing favicon links
           const existingLinks = document.querySelectorAll("link[rel*='icon']");
           existingLinks.forEach(link => link.remove());
 
-          // Add new favicon
+          // Add new favicon from API
           const link = document.createElement('link');
           link.rel = 'icon';
           link.type = 'image/png';

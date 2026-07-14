@@ -96,7 +96,7 @@ export default function Header({ transparent = false, fixed = false }) {
                 {siteName}
               </span>
               <span className="text-xs md:text-sm text-primary-100 hidden sm:block">
-                Lembaga Pendidikan Ma&apos;arif NU
+                Lembaga Pendidikan Ma&apos;arif NU PBNU
               </span>
             </div>
           </a>

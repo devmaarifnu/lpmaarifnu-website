@@ -64,7 +64,7 @@ export default async function BeritaDetailPage({ params }) {
     notFound();
   }
 
-  // Get related articles from API response or fetch same category
+  // Get related articles from API response or fallback to fetch
   let relatedArticles = [];
   if (article.related_articles && article.related_articles.length > 0) {
     relatedArticles = article.related_articles
@@ -78,6 +78,27 @@ export default async function BeritaDetailPage({ params }) {
         category: article.category?.name || 'Berita',
         slug: related.slug,
       }));
+  } else {
+    // Fallback: fetch latest articles and filter
+    try {
+      const { articles: allArticles } = await getNewsArticles({ limit: 10 });
+      if (allArticles && allArticles.length > 0) {
+        relatedArticles = allArticles
+          .filter(a => a.slug !== slug)
+          .slice(0, 3)
+          .map(a => ({
+            id: a.id,
+            title: a.title,
+            excerpt: a.excerpt || '',
+            image: a.image,
+            date: a.published_at,
+            category: a.category?.name || 'Berita',
+            slug: a.slug,
+          }));
+      }
+    } catch (error) {
+      console.error('Error fetching related articles:', error);
+    }
   }
 
   // Calculate reading time (rough estimate: 200 words per minute)
@@ -172,26 +193,24 @@ export default async function BeritaDetailPage({ params }) {
             )}
 
             {/* Article Content */}
-            <div className="bg-white rounded-xl shadow-sm p-8 md:p-12 mb-8">
-              <div
-                className="prose prose-lg max-w-none
+            <div
+              className="prose prose-lg max-w-none
                   prose-headings:font-bold prose-headings:!text-neutral-900
                   prose-h1:!text-neutral-900 prose-h2:!text-neutral-900 prose-h3:!text-neutral-900
                   prose-h4:!text-neutral-900 prose-h5:!text-neutral-900 prose-h6:!text-neutral-900
-                  prose-p:!text-neutral-900 prose-p:!text-[1.05rem] prose-p:!leading-[1.95] prose-p:!tracking-[0.016em] prose-p:!mb-7
+                  prose-p:!text-neutral-900 prose-p:!text-[1.05rem] prose-p:!leading-[1.75] prose-p:!tracking-[-0.01em] prose-p:!mb-4
                   prose-a:!text-primary-600 prose-a:no-underline hover:prose-a:underline
                   prose-img:rounded-lg
                   prose-strong:!text-neutral-900
                   prose-ul:!text-neutral-900 prose-ul:!text-[1.05rem] prose-ul:!leading-[1.9]
                   prose-ol:!text-neutral-900 prose-ol:!text-[1.05rem] prose-ol:!leading-[1.9]
-                  prose-li:!text-neutral-900 prose-li:!tracking-[0.016em] prose-li:!mb-2
+                  prose-li:!text-neutral-900 prose-li:!tracking-[-0.01em] prose-li:!mb-2
                   [&_h1]:!text-neutral-900 [&_h2]:!text-neutral-900 [&_h3]:!text-neutral-900
                   [&_h4]:!text-neutral-900 [&_h5]:!text-neutral-900 [&_h6]:!text-neutral-900
-                  [&_p]:!text-neutral-900 [&_p]:!text-[1.05rem] [&_p]:!leading-[1.95] [&_p]:!tracking-[0.016em] [&_p]:!mb-7
+                  [&_p]:!text-neutral-900 [&_p]:!text-[1.05rem] [&_p]:!leading-[1.75] [&_p]:!tracking-[-0.01em] [&_p]:!mb-4 [&_p]:!text-justify
                   [&_ul]:!text-neutral-900 [&_ol]:!text-neutral-900 [&_li]:!text-neutral-900"
                 dangerouslySetInnerHTML={{ __html: article.content }}
               />
-            </div>
 
             {/* Tags */}
             {article.tags && article.tags.length > 0 && (

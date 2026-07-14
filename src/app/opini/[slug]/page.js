@@ -191,26 +191,24 @@ export default async function OpiniDetailPage({ params }) {
             )}
 
             {/* Article Content */}
-            <div className="bg-white rounded-xl shadow-sm p-8 md:p-12 mb-8">
-              <div
-                className="prose prose-lg max-w-none
+            <div
+              className="prose prose-lg max-w-none
                   prose-headings:font-bold prose-headings:!text-neutral-900
                   prose-h1:!text-neutral-900 prose-h2:!text-neutral-900 prose-h3:!text-neutral-900
                   prose-h4:!text-neutral-900 prose-h5:!text-neutral-900 prose-h6:!text-neutral-900
-                  prose-p:!text-neutral-900 prose-p:!text-[1.05rem] prose-p:!leading-[1.95] prose-p:!tracking-[0.016em] prose-p:!mb-7
+                  prose-p:!text-neutral-900 prose-p:!text-[1.05rem] prose-p:!leading-[1.75] prose-p:!tracking-[-0.01em] prose-p:!mb-4
                   prose-a:!text-primary-600 prose-a:no-underline hover:prose-a:underline
                   prose-img:rounded-lg
                   prose-strong:!text-neutral-900
                   prose-ul:!text-neutral-900 prose-ul:!text-[1.05rem] prose-ul:!leading-[1.9]
                   prose-ol:!text-neutral-900 prose-ol:!text-[1.05rem] prose-ol:!leading-[1.9]
-                  prose-li:!text-neutral-900 prose-li:!tracking-[0.016em] prose-li:!mb-2
+                  prose-li:!text-neutral-900 prose-li:!tracking-[-0.01em] prose-li:!mb-2
                   [&_h1]:!text-neutral-900 [&_h2]:!text-neutral-900 [&_h3]:!text-neutral-900
                   [&_h4]:!text-neutral-900 [&_h5]:!text-neutral-900 [&_h6]:!text-neutral-900
-                  [&_p]:!text-neutral-900 [&_p]:!text-[1.05rem] [&_p]:!leading-[1.95] [&_p]:!tracking-[0.016em] [&_p]:!mb-7
+                  [&_p]:!text-neutral-900 [&_p]:!text-[1.05rem] [&_p]:!leading-[1.75] [&_p]:!tracking-[-0.01em] [&_p]:!mb-4 [&_p]:!text-justify
                   [&_ul]:!text-neutral-900 [&_ol]:!text-neutral-900 [&_li]:!text-neutral-900"
                 dangerouslySetInnerHTML={{ __html: displayArticle.content }}
               />
-            </div>
 
             {/* Tags */}
             {displayArticle.tags && displayArticle.tags.length > 0 && (

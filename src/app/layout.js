@@ -13,10 +13,29 @@ export const metadata = {
   description: "Lembaga Pendidikan Ma'arif Nahdlatul Ulama Pengurus Besar Nahdlatul Ulama - Berkomitmen mengembangkan pendidikan Islam berkualitas di Indonesia",
   keywords: ["LP Maarif NU", "Pendidikan NU", "Nahdlatul Ulama", "Pendidikan Islam", "Ma'arif NU"],
   authors: [{ name: "LP Ma'arif NU PBNU" }],
+  icons: {
+    icon: '/icon.png',
+    shortcut: '/favicon.ico',
+    apple: '/icon.png',
+  },
   openGraph: {
     type: "website",
     locale: "id_ID",
     siteName: "LP Ma'arif NU PBNU",
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: "LP Ma'arif NU PBNU",
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "LP Ma'arif NU PBNU - Lembaga Pendidikan Ma'arif NU",
+    description: "Lembaga Pendidikan Ma'arif Nahdlatul Ulama Pengurus Besar Nahdlatul Ulama",
+    images: ['/og-image.png'],
   },
 };
 
