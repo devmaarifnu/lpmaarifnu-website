@@ -6,6 +6,7 @@ import FaviconUpdater from "@/components/shared/FaviconUpdater";
 import { Toaster } from 'react-hot-toast';
 
 export const metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://maarifnu.or.id'),
   title: {
     default: "LP Ma'arif NU PBNU - Lembaga Pendidikan Ma'arif NU",
     template: "%s | LP Ma'arif NU PBNU",
