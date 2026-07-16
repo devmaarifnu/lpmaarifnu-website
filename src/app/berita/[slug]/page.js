@@ -128,13 +128,6 @@ export default async function BeritaDetailPage({ params }) {
               {article.title}
             </h1>
 
-            {/* Excerpt */}
-            {article.excerpt && (
-              <p className="text-lg md:text-xl text-neutral-600 mb-6 leading-relaxed">
-                {article.excerpt}
-              </p>
-            )}
-
             {/* Meta Information */}
             <div className="flex flex-wrap items-center gap-4 md:gap-6 py-4 border-y border-neutral-200 mb-8">
               {article.author && (
@@ -166,7 +159,7 @@ export default async function BeritaDetailPage({ params }) {
 
             {/* Featured Image */}
             {article.image && (
-              <div className="relative w-full aspect-[16/9] rounded-xl overflow-hidden mb-8 bg-neutral-200">
+              <div className="relative w-full aspect-[16/9] rounded-xl overflow-hidden bg-neutral-200">
                 <Image
                   src={article.image}
                   alt={article.title}
@@ -174,6 +167,15 @@ export default async function BeritaDetailPage({ params }) {
                   className="object-cover"
                   priority
                 />
+              </div>
+            )}
+
+            {/* Excerpt */}
+            {article.excerpt && (
+              <div className="text-center mt-6 mb-8">
+                <p className="text-base text-neutral-500 italic leading-relaxed">
+                  {article.excerpt}
+                </p>
               </div>
             )}
 
