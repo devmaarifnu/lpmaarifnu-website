@@ -7,22 +7,7 @@ import { notFound } from 'next/navigation';
 import NewsCard from '@/components/shared/NewsCard';
 import ShareButtons from '@/components/article/ShareButtons';
 
-export async function generateStaticParams() {
-  try {
-    const { articles } = await getNewsArticles({ limit: 100 });
-    if (!articles || articles.length === 0) {
-      // Return at least one fallback to prevent build error
-      return [{ slug: 'placeholder' }];
-    }
-    return articles.map((article) => ({
-      slug: article.slug,
-    }));
-  } catch (error) {
-    console.error('Error generating static params for berita:', error);
-    // Return at least one fallback to prevent build error
-    return [{ slug: 'placeholder' }];
-  }
-}
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
