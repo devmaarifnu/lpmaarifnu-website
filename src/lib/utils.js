@@ -107,3 +107,72 @@ export function transformArticles(articles, defaultCategory = 'Berita') {
   if (!Array.isArray(articles)) return [];
   return articles.map(article => transformArticle(article, defaultCategory)).filter(Boolean);
 }
+
+/**
+ * Split HTML content into segments with promo slots inserted evenly.
+ * Min 1 promo, max 3 promos, based on paragraph count.
+ * @param {string} html - HTML content string
+ * @returns {Array<{ type: 'content', value: string } | { type: 'promo' }>}
+ */
+export function splitHtmlForPromos(html) {
+  if (!html) return [{ type: 'content', value: '' }];
+
+  const closingP = '</p>';
+  const indices = [];
+  let pos = html.indexOf(closingP);
+
+  while (pos !== -1) {
+    indices.push(pos + closingP.length);
+    pos = html.indexOf(closingP, pos + 1);
+  }
+
+  const pCount = indices.length;
+
+  if (pCount < 2) return [{ type: 'content', value: html }];
+
+  let promoCount;
+  if (pCount >= 16) {
+    promoCount = 3;
+  } else if (pCount >= 7) {
+    promoCount = 2;
+  } else {
+    promoCount = 1;
+  }
+
+  const segmentCount = promoCount + 1;
+  const splitPoints = [];
+
+  for (let i = 1; i <= promoCount; i++) {
+    const targetIdx = Math.round((pCount * i) / segmentCount) - 1;
+    const clampedIdx = Math.max(0, Math.min(indices.length - 1, targetIdx));
+    splitPoints.push(indices[clampedIdx]);
+  }
+
+  const segments = [];
+  let lastIdx = 0;
+
+  for (const splitIdx of splitPoints) {
+    segments.push({ type: 'content', value: html.slice(lastIdx, splitIdx) });
+    segments.push({ type: 'promo' });
+    lastIdx = splitIdx;
+  }
+
+  segments.push({ type: 'content', value: html.slice(lastIdx) });
+
+  return segments;
+}
+
+/**
+ * @deprecated Use splitHtmlForPromos instead.
+ */
+export function splitHtmlAtMiddle(html) {
+  if (!html) return { firstHalf: '', secondHalf: '' };
+
+  const segments = splitHtmlForPromos(html);
+  const parts = segments.filter(s => s.type === 'content').map(s => s.value);
+
+  return {
+    firstHalf: parts[0] || '',
+    secondHalf: parts.slice(1).join('') || '',
+  };
+}
