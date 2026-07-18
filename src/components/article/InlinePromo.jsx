@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { ExternalLink, BookOpen } from 'lucide-react';
 
 export default function InlinePromo({ title, href }) {

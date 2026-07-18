@@ -7,6 +7,7 @@ import { notFound } from 'next/navigation';
 import NewsCard from '@/components/shared/NewsCard';
 import ShareButtons from '@/components/article/ShareButtons';
 import InlinePromo from '@/components/article/InlinePromo';
+import SidebarArtikel from '@/components/article/SidebarArtikel';
 
 export const dynamic = 'force-dynamic';
 
@@ -91,6 +92,19 @@ export default async function OpiniDetailPage({ params }) {
   const wordCount = article.content ? article.content.split(/\s+/).length : 0;
   const readingTime = Math.ceil(wordCount / 200);
 
+  // Fetch sidebar data (popular and latest) in parallel
+  const [popularRes, latestRes] = await Promise.all([
+    getOpinionArticles({ sort: '-views', limit: 5 }).catch(() => ({ articles: [] })),
+    getOpinionArticles({ limit: 5, sort: '-published_at' }).catch(() => ({ articles: [] })),
+  ]);
+
+  const popularArticles = (popularRes.articles || [])
+    .filter(a => a.slug !== slug)
+    .slice(0, 5);
+  const latestArticles = (latestRes.articles || [])
+    .filter(a => a.slug !== slug)
+    .slice(0, 5);
+
   const contentSegments = splitHtmlForPromos(article.content || '');
 
   const bacaJugaPool = relatedArticles.map(a => ({ title: a.title, href: `/opini/${a.slug}` }));
@@ -119,7 +133,7 @@ export default async function OpiniDetailPage({ params }) {
       </section>
 
       {/* Article Content */}
-      <article className="py-8 md:py-12">
+      <article className="pt-2 pb-8 md:pt-4 md:pb-12">
         <div className="container mx-auto">
           <div className="max-w-4xl mx-auto">
             {/* Category Badge */}
@@ -179,43 +193,61 @@ export default async function OpiniDetailPage({ params }) {
 
             {/* Excerpt */}
             {article.excerpt && (
-              <div className="text-center mt-6 mb-8">
+              <div className="text-center mt-6">
                 <p className="text-base text-neutral-500 italic leading-relaxed">
                   {article.excerpt}
                 </p>
               </div>
             )}
+          </div>
 
-            {/* Article Content */}
-            {contentSegments.map((seg, i) => {
-              if (seg.type === 'promo') {
-                const promo = pickPromo();
-                return <InlinePromo key={i} title={promo.title} href={promo.href} />;
-              }
-              if (!seg.value) return null;
-              return (
-                <div
-                  key={i}
-                  className="prose prose-lg max-w-none
-                      prose-headings:font-bold prose-headings:!text-neutral-900
-                      prose-h1:!text-neutral-900 prose-h2:!text-neutral-900 prose-h3:!text-neutral-900
-                      prose-h4:!text-neutral-900 prose-h5:!text-neutral-900 prose-h6:!text-neutral-900
-                      prose-p:!text-neutral-900 prose-p:!text-[1.05rem] prose-p:!leading-[1.75] prose-p:!tracking-[-0.01em] prose-p:!mb-4
-                      prose-a:!text-primary-600 prose-a:no-underline hover:prose-a:underline
-                      prose-img:rounded-lg
-                      prose-strong:!text-neutral-900
-                      prose-ul:!text-neutral-900 prose-ul:!text-[1.05rem] prose-ul:!leading-[1.9]
-                      prose-ol:!text-neutral-900 prose-ol:!text-[1.05rem] prose-ol:!leading-[1.9]
-                      prose-li:!text-neutral-900 prose-li:!tracking-[-0.01em] prose-li:!mb-2
-                      [&_h1]:!text-neutral-900 [&_h2]:!text-neutral-900 [&_h3]:!text-neutral-900
-                      [&_h4]:!text-neutral-900 [&_h5]:!text-neutral-900 [&_h6]:!text-neutral-900
-                      [&_p]:!text-neutral-900 [&_p]:!text-[1.05rem] [&_p]:!leading-[1.75] [&_p]:!tracking-[-0.01em] [&_p]:!mb-4 [&_p]:!text-justify
-                      [&_ul]:!text-neutral-900 [&_ol]:!text-neutral-900 [&_li]:!text-neutral-900"
-                    dangerouslySetInnerHTML={{ __html: seg.value }}
-                  />
-              );
-            })}
+          {/* Content + Sidebar */}
+          <div className="max-w-4xl mx-auto mt-8 lg:grid lg:grid-cols-12 lg:gap-8 lg:items-start">
+            <div className="lg:col-span-8">
+              {/* Article Content */}
+              {contentSegments.map((seg, i) => {
+                if (seg.type === 'promo') {
+                  const promo = pickPromo();
+                  return <InlinePromo key={i} title={promo.title} href={promo.href} />;
+                }
+                if (!seg.value) return null;
+                return (
+                  <div
+                    key={i}
+                    className="prose prose-lg max-w-none
+                        prose-headings:font-bold prose-headings:!text-neutral-900
+                        prose-h1:!text-neutral-900 prose-h2:!text-neutral-900 prose-h3:!text-neutral-900
+                        prose-h4:!text-neutral-900 prose-h5:!text-neutral-900 prose-h6:!text-neutral-900
+                        prose-p:!text-neutral-900 prose-p:!text-[1.05rem] prose-p:!leading-[1.75] prose-p:!tracking-[-0.01em] prose-p:!mb-4
+                        prose-a:!text-primary-600 prose-a:no-underline hover:prose-a:underline
+                        prose-img:rounded-lg
+                        prose-strong:!text-neutral-900
+                        prose-ul:!text-neutral-900 prose-ul:!text-[1.05rem] prose-ul:!leading-[1.9]
+                        prose-ol:!text-neutral-900 prose-ol:!text-[1.05rem] prose-ol:!leading-[1.9]
+                        prose-li:!text-neutral-900 prose-li:!tracking-[-0.01em] prose-li:!mb-2
+                        [&_h1]:!text-neutral-900 [&_h2]:!text-neutral-900 [&_h3]:!text-neutral-900
+                        [&_h4]:!text-neutral-900 [&_h5]:!text-neutral-900 [&_h6]:!text-neutral-900
+                        [&_p]:!text-neutral-900 [&_p]:!text-[1.05rem] [&_p]:!leading-[1.75] [&_p]:!tracking-[-0.01em] [&_p]:!mb-4 [&_p]:!text-justify
+                        [&_ul]:!text-neutral-900 [&_ol]:!text-neutral-900 [&_li]:!text-neutral-900"
+                      dangerouslySetInnerHTML={{ __html: seg.value }}
+                    />
+                );
+              })}
+            </div>
 
+            {/* Sidebar */}
+            <div className="lg:col-span-4 mt-10 lg:mt-0">
+              <div className="lg:sticky lg:top-24">
+                <SidebarArtikel
+                  popularArticles={popularArticles}
+                  latestArticles={latestArticles}
+                  basePath="/opini"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="max-w-4xl mx-auto">
             {/* Tags */}
             {displayArticle.tags && displayArticle.tags.length > 0 && (
               <div className="mb-8">
