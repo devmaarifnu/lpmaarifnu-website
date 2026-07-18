@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { getFeaturedNews } from '@/lib/api';
 import NewsCard from '@/components/shared/NewsCard';
 import { Newspaper } from 'lucide-react';
-import Link from 'next/link';
 import toast from 'react-hot-toast';
 
 export default function BeritaUtamaContent() {
@@ -49,18 +48,18 @@ export default function BeritaUtamaContent() {
           <span className="px-4 py-2 bg-primary-600 text-white text-sm font-semibold rounded-full">
             Semua Berita
           </span>
-          <Link
+          <a
             href="/berita/nasional"
             className="px-4 py-2 bg-white border border-neutral-300 text-neutral-700 text-sm font-medium rounded-full hover:border-primary-400 hover:text-primary-600 transition-colors"
           >
             Nasional
-          </Link>
-          <Link
+          </a>
+          <a
             href="/berita/daerah"
             className="px-4 py-2 bg-white border border-neutral-300 text-neutral-700 text-sm font-medium rounded-full hover:border-primary-400 hover:text-primary-600 transition-colors"
           >
             Daerah
-          </Link>
+          </a>
         </div>
 
         {/* Loading State */}

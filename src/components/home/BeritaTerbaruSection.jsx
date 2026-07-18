@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Calendar, Tag } from 'lucide-react';
@@ -7,7 +6,7 @@ import { formatDate } from '@/lib/utils';
 // Compact News Card Component
 function CompactNewsCard({ title, excerpt, image, date, category, slug }) {
   return (
-    <Link href={`/berita/${slug}`} className="group">
+    <a href={`/berita/${slug}`} className="group">
       <article className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 h-full flex flex-col">
         {/* Image */}
         <div className="relative w-full aspect-[4/3] overflow-hidden bg-neutral-100">
@@ -53,7 +52,7 @@ function CompactNewsCard({ title, excerpt, image, date, category, slug }) {
           </div>
         </div>
       </article>
-    </Link>
+    </a>
   );
 }
 
@@ -168,7 +167,7 @@ export default function BeritaTerbaruSection({ news = [] }) {
 
         {/* CTA Button */}
         <div className="flex justify-center">
-          <Link href="/berita">
+          <a href="/berita">
             <Button
               size="default"
               className="bg-white text-emerald-600 hover:bg-emerald-50 shadow-md hover:shadow-lg transition-all duration-300 group px-5 py-2 text-sm font-semibold"
@@ -176,7 +175,7 @@ export default function BeritaTerbaruSection({ news = [] }) {
               Lihat Semua Berita
               <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Button>
-          </Link>
+          </a>
         </div>
       </div>
 

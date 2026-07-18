@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { formatDate } from '@/lib/utils';
 
 function ArticleList({ title, articles, basePath }) {
@@ -12,7 +11,7 @@ function ArticleList({ title, articles, basePath }) {
       <ul className="space-y-3">
         {articles.map((article, idx) => (
           <li key={article.id || idx}>
-            <Link
+            <a
               href={`${basePath}/${article.slug}`}
               className="group block"
             >
@@ -31,7 +30,7 @@ function ArticleList({ title, articles, basePath }) {
                   )}
                 </span>
               </span>
-            </Link>
+            </a>
           </li>
         ))}
       </ul>

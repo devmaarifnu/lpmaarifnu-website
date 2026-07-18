@@ -1,6 +1,5 @@
 import { getOpinionArticle, getOpinionArticles } from '@/lib/api';
 import Image from 'next/image';
-import Link from 'next/link';
 import { Calendar, User, Tag, ArrowLeft, Clock } from 'lucide-react';
 import { formatDate, splitHtmlForPromos } from '@/lib/utils';
 import { notFound } from 'next/navigation';
@@ -119,13 +118,13 @@ export default async function OpiniDetailPage({ params }) {
       <section className="bg-white border-b border-neutral-200">
         <div className="container mx-auto py-4">
           <div className="flex items-center gap-4">
-            <Link
+            <a
               href="/opini"
               className="flex items-center gap-2 text-primary-600 hover:text-primary-700 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               <span className="text-sm font-medium">Kembali ke Opini</span>
-            </Link>
+            </a>
             <span className="text-neutral-300">/</span>
             <span className="text-sm text-neutral-600 line-clamp-1">{article.title}</span>
           </div>

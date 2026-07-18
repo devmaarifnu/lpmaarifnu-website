@@ -1,6 +1,5 @@
 import { getSatpenById } from '@/lib/api';
 import { notFound } from 'next/navigation';
-import Link from 'next/link';
 import {
   ArrowLeft, Building2, MapPin, User, Award,
   Calendar, Users, GraduationCap, Hash, CheckCircle, Clock,
@@ -74,13 +73,13 @@ export default async function SatpenDetailPage({ params }) {
       <section className="relative bg-gradient-to-r from-teal-700 to-teal-500 text-white py-12 md:py-16 overflow-hidden">
         <BatikPattern opacity={0.15} />
         <div className="container mx-auto relative z-10">
-          <Link
+          <a
             href="/data-satpen"
             className="inline-flex items-center gap-2 text-teal-100 hover:text-white text-sm mb-6 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Kembali ke Data Satpen
-          </Link>
+          </a>
 
           <div className="flex flex-wrap items-start gap-4">
             <div className="flex-1">

@@ -1,6 +1,5 @@
 import { getNewsArticle, getNewsArticles } from '@/lib/api';
 import Image from 'next/image';
-import Link from 'next/link';
 import { Calendar, User, Tag, ArrowLeft, Clock } from 'lucide-react';
 import { formatDate, splitHtmlForPromos } from '@/lib/utils';
 import { notFound } from 'next/navigation';
@@ -119,13 +118,13 @@ export default async function BeritaDetailPage({ params }) {
       <section className="bg-white border-b border-neutral-200">
         <div className="container mx-auto py-4">
           <div className="flex items-center gap-4">
-            <Link
+            <a
               href="/berita"
               className="flex items-center gap-2 text-primary-600 hover:text-primary-700 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               <span className="text-sm font-medium">Kembali ke Berita</span>
-            </Link>
+            </a>
             <span className="text-neutral-300">/</span>
             <span className="text-sm text-neutral-600 line-clamp-1">{article.title}</span>
           </div>
@@ -137,13 +136,13 @@ export default async function BeritaDetailPage({ params }) {
           <div className="max-w-4xl mx-auto">
             {/* Category Badge */}
             {article.category && (
-              <Link
+              <a
                 href={`/berita/${article.category.slug}`}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary-100 text-primary-700 rounded-full text-sm font-semibold hover:bg-primary-200 transition-colors mb-4"
               >
                 <Tag className="w-3.5 h-3.5" />
                 {article.category.name}
-              </Link>
+              </a>
             )}
 
             {/* Title */}
