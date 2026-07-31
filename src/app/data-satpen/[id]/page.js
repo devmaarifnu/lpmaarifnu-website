@@ -1,8 +1,7 @@
 import { getSatpenById } from '@/lib/api';
 import { notFound } from 'next/navigation';
-import Link from 'next/link';
 import {
-  ArrowLeft, Building2, MapPin, User, Phone, Mail, Award,
+  ArrowLeft, Building2, MapPin, User, Award,
   Calendar, Users, GraduationCap, Hash, CheckCircle, Clock,
 } from 'lucide-react';
 import BatikPattern from '@/components/shared/BatikPattern';
@@ -74,13 +73,13 @@ export default async function SatpenDetailPage({ params }) {
       <section className="relative bg-gradient-to-r from-teal-700 to-teal-500 text-white py-12 md:py-16 overflow-hidden">
         <BatikPattern opacity={0.15} />
         <div className="container mx-auto relative z-10">
-          <Link
+          <a
             href="/data-satpen"
             className="inline-flex items-center gap-2 text-teal-100 hover:text-white text-sm mb-6 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Kembali ke Data Satpen
-          </Link>
+          </a>
 
           <div className="flex flex-wrap items-start gap-4">
             <div className="flex-1">
@@ -157,18 +156,6 @@ export default async function SatpenDetailPage({ params }) {
                 <InfoRow icon={MapPin} label="Provinsi" value={satpen.provinsi?.nama} />
               </div>
             </div>
-
-            {/* Kontak */}
-            {(satpen.phone || satpen.email || satpen.fax) && (
-              <div className="bg-white rounded-xl shadow-sm p-6 border border-neutral-200">
-                <h2 className="text-lg font-bold text-neutral-900 mb-4">Kontak</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <InfoRow icon={Phone} label="Telepon" value={satpen.phone} />
-                  <InfoRow icon={Phone} label="Fax" value={satpen.fax} />
-                  <InfoRow icon={Mail} label="Email" value={satpen.email} />
-                </div>
-              </div>
-            )}
           </div>
 
           {/* Sidebar */}

@@ -5,7 +5,6 @@ import { getSatpenData, getSatpenStatistics, getProvinsi, getKabupaten, getJenja
 import { Search, Download, Building2, MapPin, User, Award, ChevronLeft, ChevronRight, ChevronRight as ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import BatikPattern from '@/components/shared/BatikPattern';
-import Link from 'next/link';
 
 export default function DataSatpenPage() {
   const [satpenData, setSatpenData] = useState([]);
@@ -297,7 +296,7 @@ export default function DataSatpenPage() {
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {satpenData.map((item) => (
-                  <Link
+                  <a
                     key={item.id}
                     href={`/data-satpen/${item.id}`}
                     className="group bg-white rounded-lg shadow-sm hover:shadow-lg transition-all p-6 border border-neutral-200 hover:border-teal-300 flex flex-col"
@@ -353,7 +352,7 @@ export default function DataSatpenPage() {
                         </span>
                       </div>
                     </div>
-                  </Link>
+                  </a>
                 ))}
               </div>
 

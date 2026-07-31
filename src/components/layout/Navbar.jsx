@@ -32,7 +32,7 @@ function DesktopNavItem({ item, isActive }) {
 
   return (
     <div
-      className="relative"
+      className="relative before:absolute before:content-[''] before:inset-x-0 before:top-full before:h-3"
       onMouseEnter={() => setIsOpen(true)}
       onMouseLeave={() => setIsOpen(false)}
     >

@@ -78,7 +78,7 @@ export default function HeroSection() {
           {/* Left Side - Content */}
           <div className="text-white space-y-6">
             <div className="inline-block px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium">
-              🎓 Lembaga Pendidikan Ma&apos;arif NU
+              🎓 Lembaga Pendidikan Ma&apos;arif NU PBNU
             </div>
 
             <h1 className="text-3xl md:text-4xl font-bold leading-tight">

@@ -1,28 +1,14 @@
 import { getNewsArticle, getNewsArticles } from '@/lib/api';
 import Image from 'next/image';
-import Link from 'next/link';
 import { Calendar, User, Tag, ArrowLeft, Clock } from 'lucide-react';
-import { formatDate } from '@/lib/utils';
+import { formatDate, splitHtmlForPromos } from '@/lib/utils';
 import { notFound } from 'next/navigation';
 import NewsCard from '@/components/shared/NewsCard';
 import ShareButtons from '@/components/article/ShareButtons';
+import InlinePromo from '@/components/article/InlinePromo';
+import SidebarArtikel from '@/components/article/SidebarArtikel';
 
-export async function generateStaticParams() {
-  try {
-    const { articles } = await getNewsArticles({ limit: 100 });
-    if (!articles || articles.length === 0) {
-      // Return at least one fallback to prevent build error
-      return [{ slug: 'placeholder' }];
-    }
-    return articles.map((article) => ({
-      slug: article.slug,
-    }));
-  } catch (error) {
-    console.error('Error generating static params for berita:', error);
-    // Return at least one fallback to prevent build error
-    return [{ slug: 'placeholder' }];
-  }
-}
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
@@ -64,7 +50,7 @@ export default async function BeritaDetailPage({ params }) {
     notFound();
   }
 
-  // Get related articles from API response or fetch same category
+  // Get related articles from API response or fallback to fetch
   let relatedArticles = [];
   if (article.related_articles && article.related_articles.length > 0) {
     relatedArticles = article.related_articles
@@ -78,11 +64,53 @@ export default async function BeritaDetailPage({ params }) {
         category: article.category?.name || 'Berita',
         slug: related.slug,
       }));
+  } else {
+    // Fallback: fetch latest articles and filter
+    try {
+      const { articles: allArticles } = await getNewsArticles({ limit: 10 });
+      if (allArticles && allArticles.length > 0) {
+        relatedArticles = allArticles
+          .filter(a => a.slug !== slug)
+          .slice(0, 3)
+          .map(a => ({
+            id: a.id,
+            title: a.title,
+            excerpt: a.excerpt || '',
+            image: a.image,
+            date: a.published_at,
+            category: a.category?.name || 'Berita',
+            slug: a.slug,
+          }));
+      }
+    } catch (error) {
+      console.error('Error fetching related articles:', error);
+    }
   }
 
   // Calculate reading time (rough estimate: 200 words per minute)
   const wordCount = article.content ? article.content.split(/\s+/).length : 0;
   const readingTime = Math.ceil(wordCount / 200);
+
+  // Fetch sidebar data (popular and latest) in parallel
+  const [popularRes, latestRes] = await Promise.all([
+    getNewsArticles({ sort: '-views', limit: 5 }).catch(() => ({ articles: [] })),
+    getNewsArticles({ limit: 5, sort: '-published_at' }).catch(() => ({ articles: [] })),
+  ]);
+
+  const popularArticles = (popularRes.articles || [])
+    .filter(a => a.slug !== slug)
+    .slice(0, 5);
+  const latestArticles = (latestRes.articles || [])
+    .filter(a => a.slug !== slug)
+    .slice(0, 5);
+
+  const contentSegments = splitHtmlForPromos(article.content || '');
+
+  const bacaJugaPool = relatedArticles.map(a => ({ title: a.title, href: `/berita/${a.slug}` }));
+
+  const shuffledPool = [...bacaJugaPool].sort(() => Math.random() - 0.5);
+  let promoIdx = 0;
+  const pickPromo = () => shuffledPool[promoIdx++ % shuffledPool.length];
 
   return (
     <div className="min-h-screen bg-neutral-50">
@@ -90,44 +118,37 @@ export default async function BeritaDetailPage({ params }) {
       <section className="bg-white border-b border-neutral-200">
         <div className="container mx-auto py-4">
           <div className="flex items-center gap-4">
-            <Link
+            <a
               href="/berita"
               className="flex items-center gap-2 text-primary-600 hover:text-primary-700 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               <span className="text-sm font-medium">Kembali ke Berita</span>
-            </Link>
+            </a>
             <span className="text-neutral-300">/</span>
             <span className="text-sm text-neutral-600 line-clamp-1">{article.title}</span>
           </div>
         </div>
       </section>
 
-      <article className="py-12 md:py-16">
+      <article className="pt-4 pb-12 md:pt-6 md:pb-16">
         <div className="container mx-auto">
           <div className="max-w-4xl mx-auto">
             {/* Category Badge */}
             {article.category && (
-              <Link
+              <a
                 href={`/berita/${article.category.slug}`}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary-100 text-primary-700 rounded-full text-sm font-semibold hover:bg-primary-200 transition-colors mb-4"
               >
                 <Tag className="w-3.5 h-3.5" />
                 {article.category.name}
-              </Link>
+              </a>
             )}
 
             {/* Title */}
             <h1 className="font-bold text-neutral-900 mb-4 leading-tight" style={{ fontSize: 'clamp(1.75rem, 5vw, 2.25rem)' }}>
               {article.title}
             </h1>
-
-            {/* Excerpt */}
-            {article.excerpt && (
-              <p className="text-lg md:text-xl text-neutral-600 mb-6 leading-relaxed">
-                {article.excerpt}
-              </p>
-            )}
 
             {/* Meta Information */}
             <div className="flex flex-wrap items-center gap-4 md:gap-6 py-4 border-y border-neutral-200 mb-8">
@@ -160,7 +181,7 @@ export default async function BeritaDetailPage({ params }) {
 
             {/* Featured Image */}
             {article.image && (
-              <div className="relative w-full aspect-[16/9] rounded-xl overflow-hidden mb-8 bg-neutral-200">
+              <div className="relative w-full aspect-[16/9] rounded-xl overflow-hidden bg-neutral-200">
                 <Image
                   src={article.image}
                   alt={article.title}
@@ -171,28 +192,63 @@ export default async function BeritaDetailPage({ params }) {
               </div>
             )}
 
-            {/* Article Content */}
-            <div className="bg-white rounded-xl shadow-sm p-8 md:p-12 mb-8">
-              <div
-                className="prose prose-lg max-w-none
-                  prose-headings:font-bold prose-headings:!text-neutral-900
-                  prose-h1:!text-neutral-900 prose-h2:!text-neutral-900 prose-h3:!text-neutral-900
-                  prose-h4:!text-neutral-900 prose-h5:!text-neutral-900 prose-h6:!text-neutral-900
-                  prose-p:!text-neutral-900 prose-p:!text-[1.05rem] prose-p:!leading-[1.95] prose-p:!tracking-[0.016em] prose-p:!mb-7
-                  prose-a:!text-primary-600 prose-a:no-underline hover:prose-a:underline
-                  prose-img:rounded-lg
-                  prose-strong:!text-neutral-900
-                  prose-ul:!text-neutral-900 prose-ul:!text-[1.05rem] prose-ul:!leading-[1.9]
-                  prose-ol:!text-neutral-900 prose-ol:!text-[1.05rem] prose-ol:!leading-[1.9]
-                  prose-li:!text-neutral-900 prose-li:!tracking-[0.016em] prose-li:!mb-2
-                  [&_h1]:!text-neutral-900 [&_h2]:!text-neutral-900 [&_h3]:!text-neutral-900
-                  [&_h4]:!text-neutral-900 [&_h5]:!text-neutral-900 [&_h6]:!text-neutral-900
-                  [&_p]:!text-neutral-900 [&_p]:!text-[1.05rem] [&_p]:!leading-[1.95] [&_p]:!tracking-[0.016em] [&_p]:!mb-7
-                  [&_ul]:!text-neutral-900 [&_ol]:!text-neutral-900 [&_li]:!text-neutral-900"
-                dangerouslySetInnerHTML={{ __html: article.content }}
-              />
+            {/* Excerpt */}
+            {article.excerpt && (
+              <div className="text-center mt-6">
+                <p className="text-base text-neutral-500 italic leading-relaxed">
+                  {article.excerpt}
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Content + Sidebar */}
+          <div className="max-w-4xl mx-auto mt-8 lg:grid lg:grid-cols-12 lg:gap-8 lg:items-start">
+            <div className="lg:col-span-8">
+              {/* Article Content */}
+              {contentSegments.map((seg, i) => {
+                if (seg.type === 'promo') {
+                  const promo = pickPromo();
+                  return <InlinePromo key={i} title={promo.title} href={promo.href} />;
+                }
+                if (!seg.value) return null;
+                return (
+                  <div
+                    key={i}
+                    className="prose prose-lg max-w-none
+                        prose-headings:font-bold prose-headings:!text-neutral-900
+                        prose-h1:!text-neutral-900 prose-h2:!text-neutral-900 prose-h3:!text-neutral-900
+                        prose-h4:!text-neutral-900 prose-h5:!text-neutral-900 prose-h6:!text-neutral-900
+                        prose-p:!text-neutral-900 prose-p:!text-[1.05rem] prose-p:!leading-[1.75] prose-p:!tracking-[-0.01em] prose-p:!mb-4
+                        prose-a:!text-primary-600 prose-a:no-underline hover:prose-a:underline
+                        prose-img:rounded-lg
+                        prose-strong:!text-neutral-900
+                        prose-ul:!text-neutral-900 prose-ul:!text-[1.05rem] prose-ul:!leading-[1.9]
+                        prose-ol:!text-neutral-900 prose-ol:!text-[1.05rem] prose-ol:!leading-[1.9]
+                        prose-li:!text-neutral-900 prose-li:!tracking-[-0.01em] prose-li:!mb-2
+                        [&_h1]:!text-neutral-900 [&_h2]:!text-neutral-900 [&_h3]:!text-neutral-900
+                        [&_h4]:!text-neutral-900 [&_h5]:!text-neutral-900 [&_h6]:!text-neutral-900
+                        [&_p]:!text-neutral-900 [&_p]:!text-[1.05rem] [&_p]:!leading-[1.75] [&_p]:!tracking-[-0.01em] [&_p]:!mb-4 [&_p]:!text-justify
+                        [&_ul]:!text-neutral-900 [&_ol]:!text-neutral-900 [&_li]:!text-neutral-900"
+                      dangerouslySetInnerHTML={{ __html: seg.value }}
+                    />
+                );
+              })}
             </div>
 
+            {/* Sidebar */}
+            <div className="lg:col-span-4 mt-10 lg:mt-0">
+              <div className="lg:sticky lg:top-24">
+                <SidebarArtikel
+                  popularArticles={popularArticles}
+                  latestArticles={latestArticles}
+                  basePath="/berita"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="max-w-4xl mx-auto">
             {/* Tags */}
             {article.tags && article.tags.length > 0 && (
               <div className="mt-8 mb-8">
