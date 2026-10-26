@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import BatikPattern from '@/components/shared/BatikPattern';
-import { getOrganizationStructure } from '@/lib/api';
+import { getOrganizationBoardMembers, getOrganizationStructure } from '@/lib/api';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,9 +11,24 @@ export const metadata = {
 
 export default async function SusunanPengurusPage() {
   // Fetch organization structure from API
-  const orgData = await getOrganizationStructure();
+  const [orgData, boardData] = await Promise.all([
+    getOrganizationStructure(),
+    getOrganizationBoardMembers(),
+  ]);
 
-  if (!orgData) {
+  // Default placeholder image using ui-avatars
+  const defaultImage = (name) =>
+    `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'Unknown')}&background=1a6b3a&color=fff&size=400`;
+
+  // Position metadata can be embedded in a person or returned as a separate catalog.
+  const boardMemberList = Array.isArray(boardData)
+    ? boardData
+    : boardData?.board_members || boardData?.members || boardData?.pengurus || [];
+  const boardMembers = Array.isArray(boardMemberList)
+    ? boardMemberList
+    : boardMemberList ? [boardMemberList] : [];
+
+  if (!orgData && boardMembers.length === 0) {
     return (
       <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
         <div className="text-center">
@@ -24,40 +39,137 @@ export default async function SusunanPengurusPage() {
     );
   }
 
-  // Default placeholder image using ui-avatars
-  const defaultImage = (name) =>
-    `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'Unknown')}&background=1a6b3a&color=fff&size=400`;
+  const positionCatalog = [
+    ...(orgData?.positions || []),
+    ...(orgData?.organization_positions || []),
+    ...(orgData?.organizationPositions || []),
+    ...(boardData?.positions || []),
+    ...(boardData?.organization_positions || []),
+    ...(boardData?.organizationPositions || []),
+  ];
+
+  const getPositionData = (person) => {
+    const embeddedPosition = typeof person?.position === 'object' ? person.position : null;
+    const positionId = person?.position_id ?? embeddedPosition?.id;
+    return person?.organization_position || embeddedPosition ||
+      positionCatalog.find((position) => String(position.id) === String(positionId)) || {};
+  };
+
+  // Accept the current position catalog fields and the older API fields.
+  const getPositionName = (person, fallback) => {
+    const positionData = getPositionData(person);
+    return person?.position_name || positionData.position_name ||
+      (typeof person?.position === 'string' ? person.position : '') || person?.jabatan || fallback;
+  };
+
+  const sortByOrderNumber = (people) =>
+    [...(people || [])].sort((a, b) => {
+      const aOrder = a?.order_number ?? getPositionData(a).order_number ?? 0;
+      const bOrder = b?.order_number ?? getPositionData(b).order_number ?? 0;
+      return aOrder - bOrder;
+    });
+
+  const collectPeople = (value, inheritedPosition = null) => {
+    if (Array.isArray(value)) return value.flatMap((item) => collectPeople(item, inheritedPosition));
+    if (!value || typeof value !== 'object') return [];
+    const currentPosition = value.position_type || value.position_name ? value : inheritedPosition;
+    const person = value.name || value.nama
+      ? { ...value, organization_position: value.organization_position || currentPosition }
+      : null;
+    return [
+      ...(person ? [person] : []),
+      ...Object.values(value).flatMap((child) => collectPeople(child, currentPosition)),
+    ];
+  };
+
+  const allPeople = [...new Map(
+    collectPeople([orgData, boardMembers])
+      .map((person) => [person.id ?? `${person.name || person.nama}-${person.position_id ?? getPositionName(person, '')}`, person])
+  ).values()];
+
+  const getPositionType = (person) => {
+    const positionData = getPositionData(person);
+    const type = person?.position_type || positionData.position_type;
+    if (type) return String(type).toLowerCase();
+    const name = getPositionName(person, '').toLowerCase();
+    if (name.includes('wakil ketua')) return 'wakil';
+    if (name.includes('ketua')) return 'ketua';
+    if (name.includes('sekretaris')) return 'sekretaris';
+    if (name.includes('bendahara')) return 'bendahara';
+    return '';
+  };
+
+  const hasParentPosition = (person) => {
+    const parentId = person?.parent_id ?? getPositionData(person).parent_id;
+    return parentId !== null && parentId !== undefined;
+  };
+
+  const findPeopleByPosition = (predicate) =>
+    sortByOrderNumber(allPeople.filter(predicate));
+
+  const firstPerson = (value) => Array.isArray(value) ? sortByOrderNumber(value)[0] : value;
 
   // Helper to build a single person card object
-  const transformPerson = (person, fallbackJabatan) => {
+  const transformPerson = (person, jabatan) => {
     if (!person) return null;
     const nama = person.name || person.nama || '';
     return {
       nama,
-      jabatan: person.position_name || fallbackJabatan,
+      jabatan: getPositionName(person, jabatan),
       image: person.photo || person.image || defaultImage(nama),
     };
   };
 
   // Helper to build an array of person card objects
   const transformPersonArray = (arr, fallbackJabatan) =>
-    (arr || []).map((p, idx) => {
+    sortByOrderNumber(arr).map((p) => {
       const nama = p?.name || p?.nama || '';
+      const jabatan = getPositionName(p, fallbackJabatan);
+      const tanpaNomor = ['Wakil Ketua', 'Wakil Sekretaris'].includes(fallbackJabatan);
       return {
         nama,
-        jabatan: p?.position_name || `${fallbackJabatan} ${idx + 1}`,
+        jabatan: tanpaNomor ? jabatan.replace(/\s+(?:\d+|[IVXLCDM]+)$/i, '') : jabatan,
         image: p?.photo || p?.image || defaultImage(nama),
       };
     });
 
   // Transform pimpinan data
   const transformedStruktur = {
-    ketua: transformPerson(orgData?.ketua, 'Ketua Umum'),
-    wakil_ketua: transformPersonArray(orgData?.wakil_ketua, 'Wakil Ketua'),
-    sekretaris: transformPerson(orgData?.sekretaris, 'Sekretaris Umum'),
-    wakil_sekretaris: transformPersonArray(orgData?.wakil_sekretaris, 'Wakil Sekretaris'),
-    bendahara: transformPerson(orgData?.bendahara, 'Bendahara Umum'),
-    wakil_bendahara: transformPersonArray(orgData?.wakil_bendahara, 'Wakil Bendahara'),
+    ketua: transformPerson(
+      firstPerson(orgData?.ketua || orgData?.ketua_lembaga || orgData?.ketuaLembaga || orgData?.ketua_umum) ||
+        findPeopleByPosition((person) => getPositionType(person) === 'ketua' && !hasParentPosition(person))[0],
+      'Ketua Lembaga'
+    ),
+    wakil_ketua: transformPersonArray(
+      orgData?.wakil_ketua?.length ? orgData.wakil_ketua : orgData?.wakil?.length ? orgData.wakil :
+        findPeopleByPosition((person) => getPositionType(person) === 'wakil' ||
+          getPositionName(person, '').toLowerCase().includes('wakil ketua')),
+      'Wakil Ketua'
+    ),
+    sekretaris: transformPerson(
+      firstPerson(orgData?.sekretaris || orgData?.sekretaris_lembaga || orgData?.sekretarisLembaga || orgData?.sekretaris_umum) ||
+        findPeopleByPosition((person) => getPositionType(person) === 'sekretaris' &&
+          !hasParentPosition(person) && !getPositionName(person, '').toLowerCase().includes('wakil'))[0],
+      'Sekretaris Lembaga'
+    ),
+    wakil_sekretaris: transformPersonArray(
+      orgData?.wakil_sekretaris?.length ? orgData.wakil_sekretaris :
+        findPeopleByPosition((person) => getPositionType(person) === 'sekretaris' &&
+          (hasParentPosition(person) || getPositionName(person, '').toLowerCase().includes('wakil'))),
+      'Wakil Sekretaris'
+    ),
+    bendahara: transformPerson(
+      firstPerson(orgData?.bendahara || orgData?.bendahara_lembaga || orgData?.bendaharaLembaga || orgData?.bendahara_umum) ||
+        findPeopleByPosition((person) => getPositionType(person) === 'bendahara' &&
+          !hasParentPosition(person) && !getPositionName(person, '').toLowerCase().includes('wakil'))[0],
+      'Bendahara Lembaga'
+    ),
+    wakil_bendahara: transformPersonArray(
+      orgData?.wakil_bendahara?.length ? orgData.wakil_bendahara :
+        findPeopleByPosition((person) => getPositionType(person) === 'bendahara' &&
+          (hasParentPosition(person) || getPositionName(person, '').toLowerCase().includes('wakil'))),
+      'Wakil Bendahara'
+    ),
   };
 
   // Transform department data — members list, no head_name

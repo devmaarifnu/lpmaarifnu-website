@@ -269,8 +269,8 @@ export default function Navbar() {
                 'transition-colors duration-200 shadow-sm'
               )}
             >
-              Login
               <LogIn className="w-4 h-4" />
+              Login
             </a>
           </div>
         </div>

@@ -224,6 +224,19 @@ export async function getOrganizationStructure() {
   }
 }
 
+/**
+ * Fetch active board members with their organization positions.
+ * @returns {Promise<Object|Array>} Board member data
+ */
+export async function getOrganizationBoardMembers() {
+  try {
+    return await apiFetch('/organization/board-members?active=true');
+  } catch (error) {
+    console.error('Error fetching organization board members:', error);
+    return [];
+  }
+}
+
 // ============================================
 // PAGES APIs
 // ============================================
